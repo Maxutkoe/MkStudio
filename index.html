@@ -1,1834 +1,1410 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="MobileOptimized" content="176" />
-    <meta name="HandheldFriendly" content="True" />
-    <meta name="robots" content="noindex,nofollow" />
-    <script src="https://telegram.org/js/telegram-web-app.js?2"></script>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="text/javascript" src="https://rawgit.com/victornpb/f639f37373be0f6e82e1/raw/5d8f7ee8b32ae04de087d2377d8086e3389ee411/AES.js"></script>
+        <script src="https://telegram.org/js/telegram-web-app.js"></script>
+        <link rel="apple-touch-icon" type="image/png" href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
+        <meta name="apple-mobile-web-app-title" content="CodePen">
+        <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+        <link rel="mask-icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111">
+    <script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+  <title>Latest transactions</title>
+    <link rel="canonical" href="https://codepen.io/havardob/pen/PoWbeoZ">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
+
+
+
+    </head>
+    <style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  padding: 5rem 0;
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  background-color: #fff;
+}
+
+.fancy {
+  position: relative;
+  white-space: nowrap;
+  &:after {
+    --deco-height: 0.3125em;
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(var(--deco-height) * -0.625);
+    height: var(--deco-height);
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='64' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23a)'%3E%3Cpath d='M-17 30.5C-1 22 72-4 54 13 37.9 28.2-2.5 57.5 16 55.5s72-29 104-40' stroke='%2300FDCF' stroke-width='10'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='a'%3E%3Cpath fill='%23fff' d='M0 0h100v64H0z'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A");
+    background-size: auto 100%;
+    background-repeat: round;
+    background-position: 0em;
+  }
+}
+
+section {
+  width: 90%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+section + section {
+  margin-top: 2.5em;
+}
+
+h1 {
+  font-weight: 700;
+  line-height: 1.125;
+  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+  text-align: center;
+
+}
+#usdt{
+	font-weight: 700;
+	font-family: "Manrope", sans-serif;
+  	line-height: 1.125;
+  	font-size: clamp(2rem, 3vw, 3rem);
+	padding: 0px 0px 10px 0px;
+  	text-align: center;
+}
+
+h2 {
+  margin-top: 0.25em;
+  color: #999;
+  font-size: clamp(1.125rem, 2.5vw, 1.25rem);
+  text-align: center;
+
+}
+
+
+h2 + * {
+  margin-top: 1.5em;
+}
+
+summary {
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+  padding: 1em 0.5em;
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary:hover {
+  background-color: transparent;
+}
+summary div {
+  display: flex;
+  align-items: center;
+}
+summary h3 {
+  display: flex;
+  flex-direction: column;
+}
+summary small {
+  color: #999;
+  font-size: 0.875em;
+}
+summary strong {
+  font-weight: 700;
+}
+summary span:first-child {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 10px;
+  background-color: #f3e1e1;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.25em;
+}
+summary span:first-child svg {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+summary span:last-child {
+  font-weight: 700;
+  margin-left: auto;
+}
+summary:focus {
+  outline: none;
+}
+summary .plus {
+  color: #289672;
+}
+
+details {
+  border-bottom: 1px solid #b5bfd9;
+}
+details[open] {
+  box-shadow: -3px 0 0 #b5bfd9;
+}
+details:first-of-type {
+  border-top: 1px solid #b5bfd9;
+}
+details > div {
+  padding: 2em 2em 0;
+  font-size: 0.875em;
+}
+
+dl {
+  display: flex;
+  flex-wrap: wrap;
+}
+dl dt {
+  font-weight: 700;
+}
+dl div {
+  margin-right: 4em;
+  margin-bottom: 2em;
+}
+
+#hh{
+	padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+
+.withdraw {
+	width: 150px;
+	height: 40px;
+	border-radius: 6px;
+	display: flex;
+  justify-content: center;
+  align-items: center;
+	font-weight: 700;
+	font-family: "Manrope", sans-serif;
+  	line-height: 1.125;
+  	font-size: 18px;
+
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.support {
+	width: 125px;
+	height: 40px;
+	border-radius: 6px;
+	display: flex;
+  justify-content: center;
+  align-items: center;
+	font-weight: 700;
+  color: #fff;
+	font-family: "Manrope", sans-serif;
+  	line-height: 1.125;
+  	font-size: 12px;
+    background-color: #147ffa;
+
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+</style>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+}
+
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+}
+
+a {
+	color: inherit;
+}
+
+/* End basic CSS override */
+
+* {
+	scrollbar-width: 0;
+}
+
+*::-webkit-scrollbar {
+	background-color: transparent;
+	width: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+	border-radius: 99px;
+	background-color: #ddd;
+	border: 4px solid #fff;
+}
+
+.modal {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: rgba(#000, 0.25);
+}
+
+.modal-container {
+	max-height: 90vh;
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #fff;
+	border-radius: 16px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 15px 30px 0 rgba(#000, 0.25);
+	@media (max-width: 600px) {
+		width: 90%;
+	}
+}
+
+.modal-container-header {
+	padding: 16px 32px;
+	border-bottom: 1px solid #ddd;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.modal-container-title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	line-height: 1;
+	font-weight: 700;
+	font-size: 1.125;
+	svg {
+		width: 32px;
+		height: 32px;
+		color: #750550;
+	}
+}
+
+.modal-container-body {
+	padding: 24px 32px 51px;
+	overflow-y: auto;
+}
+
+.rtf {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-weight: 700;
+	}
+
+	h1 {
+		font-size: 1.5rem;
+		line-height: 1.125;
+	}
+
+	h2 {
+		font-size: 1.25rem;
+		line-height: 1.25;
+	}
+
+	h3 {
+		font-size: 1rem;
+		line-height: 1.5;
+	}
+
+	& > * + * {
+		margin-top: 1em;
+	}
+
+	& > * + :is(h1, h2, h3) {
+		margin-top: 2em;
+	}
+
+	& > :is(h1, h2, h3) + * {
+		margin-top: 0.75em;
+	}
+
+	ul,
+	ol {
+		margin-left: 20px;
+		list-style-position: inside;
+	}
+
+	ol {
+		list-style: numeric;
+	}
+
+	ul {
+		list-style: disc;
+	}
+}
+
+.modal-container-footer {
+	padding: 20px 32px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	border-top: 1px solid #ddd;
+	gap: 12px;
+	position: relative;
+	&:after {
+		content: "";
+		display: block;
+		position: absolute;
+		top: -51px;
+		left: 24px;
+		right: 24px;
+		height: 50px;
+		flex-shrink: 0;
+		background-image: linear-gradient(to top, rgba(#fff, 0.75), transparent);
+		pointer-events: none;
+	}
+}
+
+.menu {
+  position: fixed;
+  bottom: 3%;
+  left: 42%;
+  padding: 30px;
+  
+  background: #fff;
+  border-radius: 100%;
+  cursor: pointer;
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, 0.15), -7px -7px 20px rgba(255, 255, 255, 1), inset 0px 0px 4px rgba(255, 255, 255, 0.2), inset 7px 7px 15px rgba(55, 84, 170, 0), inset -7px -7px 20px rgba(255, 255, 255, 0), 0px 0px 4px rgba(255, 255, 255, 0);
+  &::before, &::after {
+    content: "";
+    background: #000000;
+    border-radius: 5px;
+    width: 30px;
+    height: 5px;
+    position: absolute;
+    left: 16px;
+    top: 27px;
+    transition: 0.2s ease;
+    z-index: 1;
+  }
+  &::before {
+    transform: rotate(0deg);
+  }
+  &::after {
+    transform: rotate(-90deg);
+  }
+  &.open {
+    opacity: .9;
+    &::before {
+      transform: rotate(45deg);
+    }
+    &::after {
+      transform: rotate(-45deg);
+    }
+    .button {
+      opacity: 1;
+      pointer-events: auto;
+      &:first-of-type {
+        bottom: 40px;
+        right: 70px;
+      }
+      &:nth-of-type(2) {
+        bottom: 80px;
+        transition-delay: .05s;
+      }
+	  &:nth-of-type(3) {
+        bottom: 120px;
+		right: 60px;
+        transition-delay: .05s;
+      }
+	  &:nth-of-type(4) {
+        bottom: 120px;
+		right: -60px;
+        transition-delay: .05s;
+      }
+      &:last-of-type {
+        bottom: 40px;
+        right: -70px;
+        transition-delay: .1s;
+      }
+    }
+  }
+}
+
+.button {
+  padding: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #ffffff;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: inherit;
+  transition: 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28), 0.2s ease opacity, 0.2s cubic-bezier(.08,.82,.17,1) transform;
+  z-index: -1;
+  &:hover {
+    transform: scale(1.1);
+  }
+  /*&:first-of-type {
+    background: url('https://assets.codepen.io/3537853/cam.svg') no-repeat 50%/50% #000000;
+  }
+  &:nth-of-type(2) {
+    background: url('https://assets.codepen.io/3537853/img.svg') no-repeat 50%/ 50% #000000;
+  }
+  &:nth-of-type(3) {
+    background: url('https://assets.codepen.io/3537853/img.svg') no-repeat 50%/ 50% #000000;
+  }
+  &:nth-of-type(4) {
+    background: url('https://assets.codepen.io/3537853/img.svg') no-repeat 50%/ 50% #000000;
+  }
+  &:last-of-type {
+    background: url('https://assets.codepen.io/3537853/music.svg') no-repeat 50% 45%/50% 45% #000000;
+  }*/
+}
+
+
+#homescreen{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+  position: fixed;
+  border: 0px;
+  background: #fff;
+  border-radius: 100%;
+  cursor: pointer;
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, 0.15), -7px -7px 20px rgba(255, 255, 255, 1), inset 0px 0px 4px rgba(255, 255, 255, 0.2), inset 7px 7px 15px rgba(55, 84, 170, 0), inset -7px -7px 20px rgba(255, 255, 255, 0), 0px 0px 4px rgba(255, 255, 255, 0);
+}
+
+button:focus, button:active, div:focus, div:active {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+div.scrollmenu {
+background-color: transparent;
+overflow-y: none;
+overflow-x: auto;
+white-space: nowrap;
+}
+
+div.scrollmenu div {
+display: inline-block;
+color: black;
+padding: 14px;
+text-decoration: none;
+}
+
+div.scrollmenu div:hover {
+background-color: #777;
+}
+
+.cataloggames{
+	position: relative;
+	width: 220px;
+	height: 120px;
+	border: 0px;
+	border-radius: 12px;
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, 0.15), -7px -7px 20px rgba(255, 255, 255, 1), inset 0px 0px 4px rgba(255, 255, 255, 0.2), inset 7px 7px 15px rgba(55, 84, 170, 0), inset -7px -7px 20px rgba(255, 255, 255, 0), 0px 0px 4px rgba(255, 255, 255, 0);
+	background-size: 100% auto;
+	cursor: pointer;
+}
+
+.GameTitle {
+	font-size: 15px;
+	line-height: 16px;	
+	color: #000;
+}
+.GameTitle span {
+	padding: 0 5px;
+	background: rgba(255,255,255,2);
+	border-radius: 3px;
+}
+
+
+</style>
+
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
     <script>
-        function setThemeClass() {
-            document.documentElement.className = Telegram.WebApp.colorScheme;
+let tg = window.Telegram.WebApp;
+
+
+let lst = 0.0001; //lusdt
+
+tg.MainButton.text = "Отобразить транзакции";
+tg.MainButton.color = "#000";
+tg.MainButton.textColor = "#fff";
+tg.MainButton.hasShineEffect = true;
+tg.setHeaderColor("#fff");
+tg.setBottomBarColor("#fff");
+// tg.setBackgroundColor("#fff");
+tg.MainButton.show();
+tg.MainButton.onClick(function(){
+	/*if(activeMining == true){
+		activeMining=false;
+		tg.MainButton.text = "Mine";
+		tg.MainButton.hasShineEffect = true;
+
+	}
+	else{
+		activeMining=true;
+		tg.MainButton.text = "Stop mining";
+		tg.MainButton.hasShineEffect = false;
+
+	}*/
+	gg();
+});
+tg.expand();
+
+
+function random(max) {
+  return Math.floor(Math.random() * max);
+}
+function aroundom(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+window.addEventListener("load", (event) => {
+    // // function ii(){
+    // setTgPrem("no");
+    //gg();
+	document.getElementById('mainPage').style.display = 'block';
+	document.getElementById('missionsPage').style.display = 'none';
+	document.getElementById('tokenPage').style.display = 'none';
+	document.getElementById('gamesPage').style.display = 'none';
+	document.getElementById('settingsPage').style.display = 'none';
+});
+
+window.setInterval(function(){
+    //document.getElementById("usdt").innerHTML = `<span class="fancy">${lst} MKT</span>`;
+    getMktTokens();
+
+	if(lst < 1){
+    	document.getElementById("usdt").innerHTML = `<span class="fancy">${lst.toFixed(2)} MKT</span>`;
+	}
+	else if(lst > 1000){
+    	document.getElementById("usdt").innerHTML = `<span class="fancy">${(lst / 1000).toFixed(1)}k MKT</span>`;
+	}
+	else if(lst < 1000000){
+    	document.getElementById("usdt").innerHTML = `<span class="fancy">${(lst / 1000000).toFixed(1)}m MKT</span>`;
+	}
+	else if(lst < 1000000000){
+    	document.getElementById("usdt").innerHTML = `<span class="fancy">${(lst / 1000000000).toFixed(1)}b MKT</span>`;
+	}
+	else if(lst < 10000000000){
+    	document.getElementById("usdt").innerHTML = `<span class="fancy">${truncateNum((lst / 1000000000).toString(), 6)}b MKT</span>`;
+	}
+}, 1000);
+
+function truncate(str, maxlength) {
+
+    if (str.length > maxlength) {
+        str = str.substring(0, maxlength-3);     // итоговая длина равна maxlength
+        return str + "...";
+        // В кодировке Unicode существует специальный символ «троеточие»: … (HTML: &hellip;)
+    }
+    else
+    return str;
+}
+
+function truncateNum(str, maxlength) {
+
+    if (str.length > maxlength) {
+        str = str.substring(0, maxlength-3);     // итоговая длина равна maxlength
+        return str + "";
+        // В кодировке Unicode существует специальный символ «троеточие»: … (HTML: &hellip;)
+    }
+    else
+    return str;
+}
+
+function LockPhrase(block, password){
+var text = Aes.Ctr.encrypt(block, password, 128);
+return text;
+}
+
+function UnlockPhrase(block, password){
+var text = Aes.Ctr.decrypt(block, password, 128);
+return text;
+}
+
+function MainButtonActiveMining(){
+	tg.MainButton.setText("Остановить майнинг");
+	activeMining = true;
+	tg.MainButton.onClick(MainButtonDisactiveMining());
+	tg.expand();
+}
+function MainButtonDisactiveMining(){
+	tg.MainButton.setText("Начать майнинг");
+	activeMining = false;
+	tg.MainButton.onClick(MainButtonActiveMining());
+	tg.expand();
+}
+
+function gg(){
+	let api = new XMLHttpRequest();
+		const wallet = tonConnectUI.wallet.account.address;//'UQANL1PP96rxkyGZfo-pgGd6m3tBdpwlz9EFR2scmW7xQaKd';//getRandomWallet();
+		console.log(wallet);
+        const url = `https://tonapi.io/v2/blockchain/accounts/${wallet}/transactions`; //UQANL1PP96rxkyGZfo-pgGd6m3tBdpwlz9EFR2scmW7xQaKd
+
+        api.open('GET', url, true);
+        api.responseType = "json";
+        api.onload = function(){
+            const status = api.status;
+            if(status == 200){
+                        console.log(api.response);
+					for(let i = 0; i < api.response.transactions.length; i++){
+
+						const success = api.response.transactions[i].success;
+                        const hash = api.response.transactions[i].hash;
+                        const block = api.response.transactions[i].block.slice(20, 28);
+                        const fees = api.response.transactions[i].total_fees / 1000000;
+                        const difficulty = api.response.transactions[i].lt / 10000000000000;
+                        const lt = api.response.transactions[i].lt;
+
+
+                        if(success == true){
+                            console.log("Блок замайнен! #" + block + "\n" + "Ваша награда: " + "?" + "$\n" + `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}\n\n` + "Всего: " + lst + "LST");
+                            let data = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                            addBllck(block, 0, data, lst, hash, "Новый блок!", wallet);
+                        }
+                        else{
+                            console.log("Вам попался бракованный блок(! #" + block + "\n" + "Ваша награда: " + "?" + "$\n");
+                            let data = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+                            addBllck(block, 0, data, lst, hash, "Сломанный блок!", wallet);
+                        }
+					}
+                        
+            }
+            else{
+                console.log("Не удалось подклчиться");
+            }
+        };
+        api.send();
+}
+
+function ggf(){
+	let api = new XMLHttpRequest();
+		const wallet = 'UQANL1PP96rxkyGZfo-pgGd6m3tBdpwlz9EFR2scmW7xQaKd';//getRandomWallet();
+		console.log(wallet);
+        const url = `https://tonapi.io/v2/accounts/${wallet}/events?limit=25`; //UQANL1PP96rxkyGZfo-pgGd6m3tBdpwlz9EFR2scmW7xQaKd
+
+        api.open('GET', url, true);
+        api.responseType = "json";
+        api.onload = function(){
+            const status = api.status;
+            if(status == 200){
+                    console.log(api.response);
+					for(let i = 0; i < api.response.events.length; i++){																	//0:b0649302d5846ffe41b643a085d07ef8b7721c5ab463267d5a1389c35988ff20		
+						console.log(api.response.events[i].actions[0].JettonTransfer.recipient.address);																							
+						console.log(api.response.events[i].actions[0].TonTransfer.recipient.address);																							
+					}
+                        
+            }
+            else{
+                console.log("Не удалось подклчиться");
+            }
+        };
+        api.send();
+}
+
+function MegaHash(input) {
+let hash = 0;
+for (let i=0; i < input.length; i++) {
+let char = input.charCodeAt(i); 
+hash = (hash << 5) - hash + char; //32
+hash |= 0;
+}
+hash = (hash / 100 / 1000 / 10000 * navigator.connection.downlink) / 20; //из за Infinity ошибка
+if(hash <= 0){
+    hash = navigator.connection.downlink * 0.00565754577458069;
+    return hash;
+}
+else{
+    return hash;
+}
+}
+
+
+function parseMil(millisec) {
+        var seconds = (millisec / 1000).toFixed(0);
+        var minutes = Math.floor(seconds / 60);
+        var hours = "";
+        if (minutes > 59) {
+            hours = Math.floor(minutes / 60);
+            hours = (hours >= 10) ? hours : "0" + hours;
+            minutes = minutes - (hours * 60);
+            minutes = (minutes >= 10) ? minutes : "0" + minutes;
         }
 
-        Telegram.WebApp.onEvent('themeChanged', setThemeClass);
-        setThemeClass();
+        seconds = Math.floor(seconds % 60);
+        seconds = (seconds >= 10) ? seconds : "0" + seconds;
+        if (hours != "") {
+            return hours + ":" + minutes + ":" + seconds;
+        }
+        return minutes + ":" + seconds;
+    }
+
+
+function addBllck(blockId, reward, data, lst, hash, golden, wallet){
+	let blockTime =  blockId / 1000 + aroundom(6000, 30000);
+
+    let content = document.getElementById("completed");
+    const block = document.createElement('details');
+    block.id = blockId;
+    content.appendChild(block);
+    block.innerHTML = `
+      <summary>
+			<div>
+				<span style="background-color: #f2dcbb;">
+					<!--<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256">
+						<rect width="256" height="256" fill="none"></rect>
+						<path d="M192,120h27.05573a8,8,0,0,0,7.15542-4.42229l18.40439-36.80878a8,8,0,0,0-3.18631-10.52366L192,40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path>
+						<path d="M64,120H36.94427a8,8,0,0,1-7.15542-4.42229L11.38446,78.76893a8,8,0,0,1,3.18631-10.52366L64,40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path>
+						<path d="M160,40a32,32,0,0,1-64,0H64V208a8,8,0,0,0,8,8H184a8,8,0,0,0,8-8V40Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path>
+					</svg>-->
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17.6005 5.31125L11.9505 2.27125C11.3505 1.95125 10.6405 1.95125 10.0405 2.27125L4.40047 5.31125C3.99047 5.54125 3.73047 5.98125 3.73047 6.46125C3.73047 6.95125 3.98047 7.39125 4.40047 7.61125L10.0505 10.6512C10.3505 10.8112 10.6805 10.8913 11.0005 10.8913C11.3205 10.8913 11.6605 10.8112 11.9505 10.6512L17.6005 7.61125C18.0105 7.39125 18.2705 6.95125 18.2705 6.46125C18.2705 5.98125 18.0105 5.54125 17.6005 5.31125Z" fill="#000000"></path> <path d="M9.12 11.7106L3.87 9.09058C3.46 8.88058 3 8.91058 2.61 9.14058C2.23 9.38058 2 9.79058 2 10.2406V15.2006C2 16.0606 2.48 16.8306 3.25 17.2206L8.5 19.8406C8.68 19.9306 8.88 19.9806 9.08 19.9806C9.31 19.9806 9.55 19.9106 9.76 19.7906C10.14 19.5506 10.37 19.1406 10.37 18.6906V13.7306C10.36 12.8706 9.88 12.1006 9.12 11.7106Z" fill="#000000"></path> <path d="M20.0006 10.2406V12.7006C19.5206 12.5606 19.0106 12.5006 18.5006 12.5006C17.1406 12.5006 15.8106 12.9706 14.7606 13.8106C13.3206 14.9406 12.5006 16.6506 12.5006 18.5006C12.5006 18.9906 12.5606 19.4806 12.6906 19.9506C12.5406 19.9306 12.3906 19.8706 12.2506 19.7806C11.8706 19.5506 11.6406 19.1406 11.6406 18.6906V13.7306C11.6406 12.8706 12.1206 12.1006 12.8806 11.7106L18.1306 9.09058C18.5406 8.88058 19.0006 8.91058 19.3906 9.14058C19.7706 9.38058 20.0006 9.79058 20.0006 10.2406Z" fill="#000000"></path> <path d="M22.58 21.4989L21.74 20.6589C22.18 19.9989 22.44 19.1989 22.44 18.3489C22.44 16.0189 20.55 14.1289 18.22 14.1289C15.89 14.1289 14 16.0189 14 18.3489C14 20.6789 15.89 22.5689 18.22 22.5689C19.07 22.5689 19.87 22.3089 20.53 21.8689L21.37 22.7089C21.54 22.8789 21.75 22.9589 21.97 22.9589C22.19 22.9589 22.41 22.8789 22.57 22.7089C22.91 22.3689 22.91 21.8289 22.58 21.4989Z" fill="#000000"></path> </g></svg>
+
+				</span>
+				<h3>
+					<strong>Block [Test]</strong>
+					<small id="${blockId}block">${parseMil(blockTime)}</small>
+				</h3>
+				<span class="plus">Searching...</span>
+			</div>
+		</summary>
+		<div>
+			<dl>
+				<div>
+					<dt>Block</dt>
+					<dd>${data}</dd>
+				</div>
+
+				<div>
+					<dt>Hash used</dt>
+					<dd><a href="#" style="text-decoration: none;">${truncate(hash, 10)}<svg height="16" width="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5303 10.0303C17.8232 9.73744 17.8232 9.26256 17.5303 8.96967L12.5303 3.96967C12.2374 3.67678 11.7626 3.67678 11.4697 3.96967L6.46967 8.96967C6.17678 9.26256 6.17678 9.73744 6.46967 10.0303C6.76256 10.3232 7.23744 10.3232 7.53033 10.0303L11.25 6.31066L11.25 14.5C11.25 15.2133 11.0298 16.3 10.3913 17.1868C9.7804 18.0353 8.75556 18.75 7 18.75C6.58579 18.75 6.25 19.0858 6.25 19.5C6.25 19.9142 6.58579 20.25 7 20.25C9.24444 20.25 10.7196 19.298 11.6087 18.0632C12.4702 16.8667 12.75 15.4534 12.75 14.5L12.75 6.31066L16.4697 10.0303C16.7626 10.3232 17.2374 10.3232 17.5303 10.0303Z" fill="#000000"></path> </g></svg></a></dd> <!--•-->
+				</div>
+
+				<div>
+					<dt>Block ID</dt>
+					<dd>#${blockId}</dd>
+				</div>
+				<div>
+					<dt>Wallet</dt>
+					<dd><a href="https://tonviewer.com/${wallet}" style="text-decoration: none;">${truncate(wallet, 10)}<svg height="16" width="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5303 10.0303C17.8232 9.73744 17.8232 9.26256 17.5303 8.96967L12.5303 3.96967C12.2374 3.67678 11.7626 3.67678 11.4697 3.96967L6.46967 8.96967C6.17678 9.26256 6.17678 9.73744 6.46967 10.0303C6.76256 10.3232 7.23744 10.3232 7.53033 10.0303L11.25 6.31066L11.25 14.5C11.25 15.2133 11.0298 16.3 10.3913 17.1868C9.7804 18.0353 8.75556 18.75 7 18.75C6.58579 18.75 6.25 19.0858 6.25 19.5C6.25 19.9142 6.58579 20.25 7 20.25C9.24444 20.25 10.7196 19.298 11.6087 18.0632C12.4702 16.8667 12.75 15.4534 12.75 14.5L12.75 6.31066L16.4697 10.0303C16.7626 10.3232 17.2374 10.3232 17.5303 10.0303Z" fill="#000000"></path> </g></svg></a></dd>
+				</div>
+			</dl>
+		</div>
+      `;
+	  setInterval(function() {
+		blockTime = blockTime - 1000;
+		let element = document.getElementById(`${blockId}block`);
+		if (typeof(element) != 'undefined' && element != null)
+		{
+			element.innerHTML = `${parseMil(blockTime)}`;
+		}
+		else{
+			return 0;
+		}
+	  }, 1000)
+    //   console.log("ff");
+	  //setTimeout(function() {
+		let completed = document.getElementById("completed");
+    const blockComp = document.createElement('details');
+    blockComp.id = blockId;
+    content.removeChild(block);
+    completed.appendChild(blockComp);
+    blockComp.innerHTML = `
+      <summary>
+			<div>
+				<span style="background-color: #f2dcbb;">
+					<!--<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" fill="currentColor" viewBox="0 0 256 256">
+						<rect width="256" height="256" fill="none"></rect>
+						<path d="M192,120h27.05573a8,8,0,0,0,7.15542-4.42229l18.40439-36.80878a8,8,0,0,0-3.18631-10.52366L192,40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path>
+						<path d="M64,120H36.94427a8,8,0,0,1-7.15542-4.42229L11.38446,78.76893a8,8,0,0,1,3.18631-10.52366L64,40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path>
+						<path d="M160,40a32,32,0,0,1-64,0H64V208a8,8,0,0,0,8,8H184a8,8,0,0,0,8-8V40Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"></path>
+					</svg>-->
+                                   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M17.6005 5.31125L11.9505 2.27125C11.3505 1.95125 10.6405 1.95125 10.0405 2.27125L4.40047 5.31125C3.99047 5.54125 3.73047 5.98125 3.73047 6.46125C3.73047 6.95125 3.98047 7.39125 4.40047 7.61125L10.0505 10.6512C10.3505 10.8112 10.6805 10.8913 11.0005 10.8913C11.3205 10.8913 11.6605 10.8112 11.9505 10.6512L17.6005 7.61125C18.0105 7.39125 18.2705 6.95125 18.2705 6.46125C18.2705 5.98125 18.0105 5.54125 17.6005 5.31125Z" fill="#000000"></path> <path d="M9.12 11.7106L3.87 9.09058C3.46 8.88058 3 8.91058 2.61 9.14058C2.23 9.38058 2 9.79058 2 10.2406V15.2006C2 16.0606 2.48 16.8306 3.25 17.2206L8.5 19.8406C8.68 19.9306 8.88 19.9806 9.08 19.9806C9.31 19.9806 9.55 19.9106 9.76 19.7906C10.14 19.5506 10.37 19.1406 10.37 18.6906V13.7306C10.36 12.8706 9.88 12.1006 9.12 11.7106Z" fill="#000000"></path> <path d="M20.0006 10.2406V12.7006C19.5206 12.5606 19.0106 12.5006 18.5006 12.5006C17.1406 12.5006 15.8106 12.9706 14.7606 13.8106C13.3206 14.9406 12.5006 16.6506 12.5006 18.5006C12.5006 18.9906 12.5606 19.4806 12.6906 19.9506C12.5406 19.9306 12.3906 19.8706 12.2506 19.7806C11.8706 19.5506 11.6406 19.1406 11.6406 18.6906V13.7306C11.6406 12.8706 12.1206 12.1006 12.8806 11.7106L18.1306 9.09058C18.5406 8.88058 19.0006 8.91058 19.3906 9.14058C19.7706 9.38058 20.0006 9.79058 20.0006 10.2406Z" fill="#000000"></path> <path d="M21.98 15.6695C21.16 14.6595 19.91 14.0195 18.5 14.0195C17.44 14.0195 16.46 14.3895 15.69 15.0095C14.65 15.8295 14 17.0995 14 18.5195C14 19.3595 14.24 20.1595 14.65 20.8395C14.92 21.2895 15.26 21.6795 15.66 21.9995H15.67C16.44 22.6395 17.43 23.0195 18.5 23.0195C19.64 23.0195 20.67 22.5995 21.46 21.8995C21.81 21.5995 22.11 21.2395 22.35 20.8395C22.76 20.1595 23 19.3595 23 18.5195C23 17.4395 22.62 16.4395 21.98 15.6695ZM20.76 17.9595L18.36 20.1795C18.22 20.3095 18.03 20.3795 17.85 20.3795C17.66 20.3795 17.47 20.3095 17.32 20.1595L16.21 19.0495C15.92 18.7595 15.92 18.2795 16.21 17.9895C16.5 17.6995 16.98 17.6995 17.27 17.9895L17.87 18.5895L19.74 16.8595C20.04 16.5795 20.52 16.5995 20.8 16.8995C21.09 17.2095 21.07 17.6795 20.76 17.9595Z" fill="#000000"></path> </g></svg>
+
+				</span>
+				<h3>
+					<strong>Успешные Транзакции</strong>
+					<small>${golden}</small>
+				</h3>
+				<span class="plus">+${reward.toFixed(2)} MKT</span>
+			</div>
+		</summary>
+		<div>
+			<dl>
+				<div>
+					<dt>Время</dt>
+					<dd>${data}</dd>
+				</div>
+
+				<div>
+					<dt>Хеш</dt>
+					<dd><a href="#" style="text-decoration: none;">${truncate(hash, 10)}<svg height="16" width="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5303 10.0303C17.8232 9.73744 17.8232 9.26256 17.5303 8.96967L12.5303 3.96967C12.2374 3.67678 11.7626 3.67678 11.4697 3.96967L6.46967 8.96967C6.17678 9.26256 6.17678 9.73744 6.46967 10.0303C6.76256 10.3232 7.23744 10.3232 7.53033 10.0303L11.25 6.31066L11.25 14.5C11.25 15.2133 11.0298 16.3 10.3913 17.1868C9.7804 18.0353 8.75556 18.75 7 18.75C6.58579 18.75 6.25 19.0858 6.25 19.5C6.25 19.9142 6.58579 20.25 7 20.25C9.24444 20.25 10.7196 19.298 11.6087 18.0632C12.4702 16.8667 12.75 15.4534 12.75 14.5L12.75 6.31066L16.4697 10.0303C16.7626 10.3232 17.2374 10.3232 17.5303 10.0303Z" fill="#000000"></path> </g></svg></a></dd> <!--•-->
+				</div>
+
+				<div>
+					<dt>Блок ID</dt>
+					<dd>#${blockId}</dd>
+				</div>
+				<div>
+					<dt>Кошелек</dt>
+					<dd><a href="https://tonviewer.com/${wallet}" style="text-decoration: none;">${truncate(wallet, 10)}<svg height="16" width="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M17.5303 10.0303C17.8232 9.73744 17.8232 9.26256 17.5303 8.96967L12.5303 3.96967C12.2374 3.67678 11.7626 3.67678 11.4697 3.96967L6.46967 8.96967C6.17678 9.26256 6.17678 9.73744 6.46967 10.0303C6.76256 10.3232 7.23744 10.3232 7.53033 10.0303L11.25 6.31066L11.25 14.5C11.25 15.2133 11.0298 16.3 10.3913 17.1868C9.7804 18.0353 8.75556 18.75 7 18.75C6.58579 18.75 6.25 19.0858 6.25 19.5C6.25 19.9142 6.58579 20.25 7 20.25C9.24444 20.25 10.7196 19.298 11.6087 18.0632C12.4702 16.8667 12.75 15.4534 12.75 14.5L12.75 6.31066L16.4697 10.0303C16.7626 10.3232 17.2374 10.3232 17.5303 10.0303Z" fill="#000000"></path> </g></svg></a></dd>
+				</div>
+			</dl>
+		</div>
+      `;
+	  document.getElementById("usdt").innerHTML = `<span class="fancy">${lst.toFixed(2)} USDT</span>`;
+
+	  //}, blockTime);
+
+}
+
+async function connectToWallet() {
+        const connectedWallet = await tonConnectUI.connectWallet();
+        // Do something with connectedWallet if needed
+        console.log(connectedWallet);
+    }
+connectToWallet().catch(error => {
+        console.error("Error connecting to wallet:", error);
+    });
+
+
 
     </script>
-    <title></title>
-    <style>
-        body {
-            --bg-color: var(--tg-theme-bg-color, #fff);
-            font-family: sans-serif;
-            background-color: var(--bg-color);
-            color: var(--tg-theme-text-color, #222);
-            font-size: 14px;
-            margin: 0;
-            padding: 0;
-            color-scheme: var(--tg-color-scheme);
-        }
+    <body>
+<div id="mainPage">
+	<div>
+  		<div id="ton-connect" style="position: absolute; top: 2%; right: 5%; z-index: 10"></div>
+  		<button id="homescreen" style="position: fixed; top: 1%; left: 5%; z-index: 10" onclick="tg.addToHomeScreen()">
+		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g clip-path="url(#clip0_429_11177)"> <path d="M19 10V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V10M21 12L12 3L3 12" stroke="#292929" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> </g> <defs> <clipPath id="clip0_429_11177"> <rect width="24" height="24" fill="white"></rect> </clipPath> </defs> </g></svg>
+		</button>
+		<p id="usdt"><span class="fancy">Подключение...</span></p>
+		<div id="hh">
+  		<div class="withdraw" onclick="trans()">Вывести</div>
+		</div>
+    <!---<div id="hh">
+  		  <div class="support" onclick="getMktTokens()">Support</div>
+		</div>-->
 
-        body.gray {
-            background-color: var(--tg-theme-secondary-bg-color, #efefef);
-        }
-
-        a {
-            color: var(--tg-theme-link-color, #2678b6);
-        }
-
-        .btn {
-            font-size: 14px;
-            padding: 10px 17px;
-        }
-
-        .btn-primary {
-            background-color: var(--tg-theme-button-color, #50a8eb);
-            color: var(--tg-theme-button-text-color, #fff);
-            border: none;
-        }
-
-        button {
-            display: block;
-            width: 100%;
-            font-size: 14px;
-            margin: 15px 0;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: var(--tg-theme-button-color, #50a8eb);
-            color: var(--tg-theme-button-text-color, #ffffff);
-            cursor: pointer;
-        }
-
-        .main-container {
-            padding: 15px;
-        }
-
-        .list-header {
-            text-transform: uppercase;
-            font-size: .92em;
-            color: var(--tg-theme-hint-color, #ccc);
-            margin: 0 0 10px;
-        }
-
-        a.list-group-item,
-        button.list-group-item {
-            color: var(--tg-theme-text-color, #222);
-        }
-
-        .main-container p {
-            margin: 0 0 10px;
-        }
-
-        .main-container pre,
-        .main-container > .btn {
-            margin: 0 0 7px;
-        }
-
-        .main-container pre + .hint,
-        .main-container > .btn + .hint {
-            text-align: center;
-            margin: 0 0 15px;
-        }
-
-        button[disabled] {
-            opacity: 0.6;
-            cursor: auto;
-            pointer-events: none;
-        }
-
-        button.close_btn {
-            /*position: fixed;*/
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 0;
-            margin: 0;
-            padding: 16px 20px;
-            text-transform: uppercase;
-        }
-
-        input[type="text"],
-        .input[contenteditable] {
-            display: block;
-            box-sizing: border-box;
-            font-size: 14px;
-            width: 100%;
-            padding: 12px 20px;
-            margin: 15px 0;
-            border: 1px solid var(--tg-theme-link-color, #000);
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            border-radius: 4px;
-            color: var(--tg-theme-text-color, #222222);
-            text-align: start;
-        }
-
-        input[type="text"]::-webkit-input-placeholder {
-            color: var(--tg-theme-hint-color, #ccc);
-        }
-
-        input[type="text"]::-moz-placeholder {
-            color: var(--tg-theme-hint-color, #ccc);
-        }
-
-        input[type="text"]:-ms-input-placeholder {
-            color: var(--tg-theme-hint-color, #ccc);
-        }
-
-        .input[data-placeholder] {
-            position: relative;
-        }
-
-        .input[data-placeholder]:empty:before {
-            position: absolute;
-            left: 0;
-            right: 0;
-            content: attr(data-placeholder);
-            color: var(--tg-theme-hint-color, #ccc);
-            padding: 0 20px;
-            font-weight: normal;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        section {
-            padding: 15px;
-            text-align: center;
-            background-color: var(--bg-color, #ffffff);
-        }
-
-        section#top_sect {
-            background-color: var(--tg-theme-bg-color, #ffffff);
-        }
-
-        section#top_sect.second {
-            background-color: var(--tg-theme-secondary-bg-color, #efefef);
-        }
-
-        section .sect_row {
-            margin: 10px 0;
-        }
-
-        section + section {
-            padding: 0 15px 65px;
-        }
-
-        p {
-            margin: 40px 0 15px;
-        }
-
-        ul {
-            text-align: left;
-        }
-
-        li {
-            color: var(--tg-theme-hint-color, #a8a8a8);
-        }
-
-        textarea {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 7px;
-        }
-
-        pre {
-            background: rgba(0, 0, 0, .07);
-            color: var(--tg-theme-text-color, #222);
-            font-size: 12px;
-            border: none;
-            border-radius: 4px;
-            padding: 8px;
-            margin: 7px 0;
-            word-break: break-word;
-            white-space: pre-wrap;
-            text-align: left;
-        }
-
-        .dark pre {
-            background: rgba(255, 255, 255, .15);
-        }
-
-        .chat_img {
-            width: 30px;
-            border-radius: 15px;
-            margin-right: 10px;
-        }
-
-        .columns {
-            display: flex;
-        }
-
-        .columns > * {
-            flex-grow: 1;
-        }
-
-        .hint {
-            font-size: .8em;
-            color: var(--tg-theme-hint-color, #a8a8a8);
-        }
-
-        .ok {
-            color: green;
-        }
-
-        .err {
-            color: red;
-        }
-
-        .status_need {
-            display: none;
-        }
-
-        #fixed_wrap {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            transform: translateY(100vh);
-        }
-
-        .viewport-container {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: var(--tg-viewport-stable-height, 100vh);
-            transition: height .2s ease;
-        }
-
-        .viewport-container .main-container {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .viewport-container .main-container button {
-            width: auto;
-        }
-
-        .viewport-border,
-        .viewport-stable_border {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: var(--tg-viewport-height, 100vh);
-            pointer-events: none;
-        }
-
-        .viewport-stable_border {
-            height: var(--tg-viewport-stable-height, 100vh);
-        }
-
-        .viewport-border:before,
-        .viewport-stable_border:before {
-            content: attr(text);
-            display: inline-block;
-            position: absolute;
-            background: gray;
-            right: 0;
-            top: 0;
-            font-size: 7px;
-            padding: 2px 4px;
-            vertical-align: top;
-        }
-
-        .viewport-stable_border:before {
-            background: green;
-            left: 0;
-            right: auto;
-        }
-
-        .viewport-border:after,
-        .viewport-stable_border:after {
-            content: '';
-            display: block;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            border: 2px dashed gray;
-        }
-
-        .viewport-stable_border:after {
-            border-color: green;
-        }
-
-        small {
-            font-size: 12px;
-        }
-        .small {
-            font-size: 12px;
-        }
-
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .table td {
-            padding: 2px;
-        }
-        .table-bordered {
-            border: 1px solid var(--tg-theme-hint-color, #ccc);
-        }
-        .table-bordered th, .table-bordered td {
-            border: 1px solid var(--tg-theme-hint-color, #ccc);
-            padding: 4px;
-        }
-        .table.small button {
-            padding: 3px 6px;
-            font-size: 12px;
-            margin: 4px 0;
-        }
-        .table.small input {
-            padding: 3px 6px;
-            font-size: 12px;
-            margin: 4px 0;
-        }
-    </style>
-</head>
-
-<body class="" style="visibility: hidden;">
-
-<section id="top_sect" class="second">
-    <button id="main_btn" onclick="DemoApp.sendMessage('');">Send «Hello, World!»</button>
-    <button id="with_webview_btn" onclick="DemoApp.sendMessage('', true);">Send «Hello, World!» with inline webview button</button>
-    <button id="share_btn" onclick="DemoApp.sendMessage('', false, true);">Share «Hello, World!»</button>
-    <button id="share_ww_btn" onclick="DemoApp.sendMessage('', true, true);">Share «Hello, World!» with inline button</button>
-    <button id="data_btn" onclick="DemoApp.sendTime(true);">Send current time to bot (x10)</button>
-    <button onclick="DemoApp.expand();">Expand Webview</button>
-    <button onclick="DemoApp.toggleBackButton(this);">Show Back Button</button>
-    <button onclick="DemoApp.toggleSettingsButton(this);">Show Settings Button</button>
-    <button onclick="DemoApp.toggleMainButton(this);">Hide Main Button</button>
-    <button onclick="DemoApp.toggleSecondaryButton(this);">Hide Secondary Button</button>
-    <button onclick="DemoApp.toggleButtonsProgress(this);">Show Progress</button>
-    <button onclick="DemoApp.toggleSwipeBehavior(this);">Disable Vertical Swypes</button>
-    <button id="fullscreen_btn" onclick="DemoApp.toggleFullscreen(this);">Request Fullscreen</button>
-    <button id="orient_btn" onclick="DemoApp.toggleOrientationLock(this);">Lock Orientation</button>
-    <input type="text" placeholder="Input text in regular input..." id="regular_field" />
-    <div
-        class="input"
-        contenteditable="true"
-        data-placeholder="Input text in contenteditable field..."
-        id="text_field"
-    ></div>
-    <div id="peer_wrap" style="display:none">
-        <img id="peer_photo" class="chat_img" src="">
-        <span id="peer_name"></span>
-    </div>
-    <div class="sect_row">Header: <input type="color" id="header_color_input" />
-        <select id="header_color_sel">
-            <option value="bg_color" selected>bg_color</option>
-            <option value="secondary_bg_color">secondary_bg_color</option>
-            <option value="custom" id="header_color_val">custom...</option>
-        </select>
-    </div>
-    <div class="sect_row">Background: <input type="color" id="bg_color_input" />
-        <select id="bg_color_sel">
-            <option value="bg_color" selected>bg_color</option>
-            <option value="secondary_bg_color">secondary_bg_color</option>
-            <option value="custom" id="bg_color_val">custom...</option>
-        </select>
-    </div>
-    <div class="sect_row">Bottom Bar: <input type="color" id="bbar_color_input" />
-        <select id="bbar_color_sel">
-            <option value="bg_color">bg_color</option>
-            <option value="secondary_bg_color">secondary_bg_color</option>
-            <option value="bottom_bar_bg_color" selected>bottom_bar_bg_color</option>
-            <option value="custom" id="bbar_color_val">custom...</option>
-        </select>
-    </div>
-</section>
-
-<section>
-    <div id="btn_status" class="hint" style="display: none;"></div>
-
-    <p>Test links:</p>
-    <ul>
-        <li><a id="regular_link" href="?nextpage=1">Regular link #1</a> (opens inside webview)</li>
-        <li><a href="https://telegram.org/" target="_blank">target="_blank" link</a> (opens outside webview)</li>
-        <li><a href="javascript:window.open('https://telegram.org/');">window.open() link</a> (opens outside webview)</li>
-        <li><a href="https://t.me/like">LikeBot t.me link</a> (opens inside Telegram app)</li>
-        <li><a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/vote');">web_app_open_tg_link()</a> (opens inside Telegram app)</li>
-        <li><a href="javascript:Telegram.WebApp.openLink('https://google.com/');">web_app_open_link()</a> (opens outside webview)</li>
-        <li><a href="tg://resolve?domain=vote">VoteBot tg:// link</a> (does not open)</li>
-        <li><a href="javascript:Telegram.WebApp.openLink('https://telegra.ph/api',{try_instant_view:true});">web_app_open_link({try_instant_view:true})</a> (opens IV inside Telegram app)</li>
-        <li><a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/DurgerKingBot/menu');">web_app_open_tg_link(webapp_direct_link)</a> (opens with confirm for the first time, then without)</li>
-    </ul>
-    <ul>
-        <li><a href="javascript:Telegram.WebApp.openLink('https://telegram.org',{try_browser:'chrome'});">telegram.org</a> (opens in Chrome)</li>
-        <li><a href="javascript:Telegram.WebApp.openLink('https://telegram.org',{try_browser:'firefox'});">telegram.org</a> (opens in Firefox)</li>
-        <li><a href="javascript:Telegram.WebApp.openLink('https://telegram.org',{try_browser:'safari'});">telegram.org</a> (opens in Safari)</li>
-        <li><a href="javascript:Telegram.WebApp.openLink('https://telegram.org',{try_browser:'opera'});">telegram.org</a> (opens in Opera)</li>
-        <li><a href="javascript:Telegram.WebApp.close({return_back:true});">Return back</a> (Android only)</li>
-    </ul>
-    <ul>
-        <li><a href="javascript:Telegram.WebApp.shareToStory('https://telegra.ph/file/5583ac37c90979f052b7b.png');">Share picture to story</a></li>
-        <li><a href="javascript:Telegram.WebApp.shareToStory('https://telegra.ph/file/5583ac37c90979f052b7b.png',{text:'Test caption'});">Share picture to story</a> (with caption)</li>
-        <li><a href="javascript:Telegram.WebApp.shareToStory('https://telegra.ph/file/5583ac37c90979f052b7b.png',{widget_link:{url:'https://telegra.ph/Almost-done-07-23'}});">Share picture to story</a> (with link widget)</li>
-        <li><a href="javascript:Telegram.WebApp.shareToStory('https://telegra.ph/file/61f1dac694c3131a7b4ac.mp4',{text:'Test caption',widget_link:{url:'https://telegra.ph/Almost-done-07-23',name:'Link'}});">Share video to story</a> (with caption and link widget)</li>
-    </ul>
-    <ul>
-        <li><a href="javascript:DemoApp.downloadFile(this, 'https://telegra.ph/file/5583ac37c90979f052b7b.png', 'Photo.png');">Download picture</a> <span></span></li>
-        <li><a href="javascript:DemoApp.downloadFile(this, 'https://telegra.ph/file/61f1dac694c3131a7b4ac.mp4', 'Video.mp4');">Download video</a> <span></span></li>
-        <li><a href="javascript:DemoApp.downloadFile(this, 'https://pdfobject.com/pdf/sample.pdf', 'Sample.pdf');">Download PDF</a> <span></span></li>
-    </ul>
-    <ul>
-        <li><a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/addstickers/fltmp');">Stickerpack</a></li>
-        <li><a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/addstickers/fltmp', {force_request:true});">Stickerpack</a> (nocache)</li>
-    </ul>
-    <ul>
-        <li><a href="javascript:;" onclick="return DemoApp.checkHomeScreenStatus(this);">Check Home Screen Status</a> <span></span></li>
-        <li><a id="add_to_home_btn" href="javascript:;" onclick="return DemoApp.addToHomeScreen(this);">Add to Home Screen</a></li>
-    </ul>
-    <ul>
-        <li><a href="javascript:DemoApp.setEmojiStatus(this, '5213305508034783384');">Set emoji status</a> <span></span></li>
-        <li><a href="javascript:DemoApp.setEmojiStatus(this, '5213305508034783384', 300);">Set emoji status</a> for 5 min <span></span></li>
-        <li><a href="javascript:DemoApp.setEmojiStatus(this, '123');">Set emoji status</a> (invalid id) <span></span></li>
-    </ul>
-
-    <p>Test permissions:</p>
-    <div class="columns">
-        <ul>
-            <li><a href="javascript:;" onclick="return DemoApp.requestLocation(this);">Request Location</a> <span></span></li>
-            <li><a href="javascript:;" onclick="return DemoApp.requestVideo(this);">Request Video</a> <span></span></li>
-            <li><a href="javascript:;" onclick="return DemoApp.requestAudio(this);">Request Audio</a> <span></span></li>
-            <li><a href="javascript:;" onclick="return DemoApp.requestAudioVideo(this);">Request Audio+Video</a> <span></span></li>
-            <li><a href="javascript:;" onclick="return DemoApp.testClipboard(this);" id="clipboard_test">Read from clipboard</a> <span></span></li>
-        </ul>
-        <ul>
-            <li><a href="javascript:;" onclick="return DemoApp.requestWriteAccess(this);">Request write access</a> <span></span></li>
-            <li><a href="javascript:;" onclick="return DemoApp.requestPhoneNumber(this);">Request phone number</a> <span></span><br><br></li>
-            <li><a href="javascript:;" onclick="return DemoApp.requestServerTime(this);">Request server time</a> (invokes custom method) <span></span></li>
-        </ul>
-    </div>
-
-    <p>Sensors:</p>
-    <div class="columns">
-        <ul>
-            <li><a id="accelerometer_btn" href="javascript:;" onclick="return DemoApp.toggleAccelerometer(this);">Start Accelerometer</a> <span></span></li>
-            <li><a id="device_orientation_btn" href="javascript:;" onclick="return DemoApp.toggleDeviceOrientation(this);">Start DeviceOrientation(need_absolute=false)</a> <span></span></li>
-            <li id="device_orientation_abs_item"><a href="javascript:;" onclick="return DemoApp.toggleDeviceOrientation(this, true);">Start DeviceOrientation(need_absolute=true)</a> <span></span></li>
-            <li><a id="gyroscope_btn" href="javascript:;" onclick="return DemoApp.toggleGyroscope(this);">Start Gyroscope</a> <span></span></li>
-        </ul>
-    </div>
-
-    <p>Test alerts:</p>
-    <div class="columns">
-        <ul>
-            <li><a href="javascript:;" onclick="alert('Hello!');">alert</a></li>
-            <li><a href="javascript:;" onclick="confirm('Are you sure?');">confirm</a></li>
-            <li><a href="javascript:;" onclick="prompt('How old are you?');">prompt</a></li>
-        </ul>
-        <ul>
-            <li><a href="javascript:;" onclick="DemoApp.showAlert('Hello!');">showAlert</a></li>
-            <li><a href="javascript:;" onclick="DemoApp.showConfirm('Are you sure?');">showConfirm</a></li>
-            <li><a href="javascript:;" onclick="DemoApp.requestWriteAccess();">requestWriteAccess</a></li>
-            <li><a href="javascript:;" onclick="DemoApp.requestContact();">requestContact</a></li>
-            <li><a href="javascript:;" onclick="DemoApp.showPopup();">showPopup</a></li>
-            <li><a href="javascript:;" onclick="DemoApp.showScanQrPopup();">showScanQrPopup</a></li>
-            <li><a href="javascript:;" onclick="DemoApp.showScanQrPopup(true);">showScanQrPopup (links only)</a></li>
-        </ul>
-    </div>
-
-    <p>Haptics:</p>
-    <ul>
-        <li>Impact: <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('heavy');">heavy</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('light');">light</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('medium');">medium</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('rigid');">rigid</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.impactOccurred('soft');">soft</a><br><br></li>
-        <li>Notification: <a href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred('error');">error</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred('success');">success</a>, &nbsp; <a href="javascript:Telegram.WebApp.HapticFeedback.notificationOccurred('warning');">warning</a><br><br></li>
-        <li>Selection: <a href="javascript:Telegram.WebApp.HapticFeedback.selectionChanged();">changed</a><br><br></li>
-    </ul>
-
-    <p>Cloud storage:</p>
-    <form onsubmit="DemoApp.saveCloudForm(this, event);">
-        <table class="table table-bordered small">
-            <thead>
-            <tr>
-                <th width="20%">Key</th>
-                <th width="70%">Value</th>
-                <th width="10%"></th>
-            </tr>
-            </thead>
-            <tbody id="cloud_rows"></tbody>
-            <tfoot>
-            <tr>
-                <td><input type="text" name="key" /></td>
-                <td><input type="text" name="value" /></td>
-                <td>
-                    <button type="submit">Save</button>
-                    <button type="reset">Clear</button>
-                </td>
-            </tr>
-            </tfoot>
-        </table>
-    </form>
-
-    <p>Biometrics:</p>
-    <div class="columns">
-        <ul>
-            <li>isInited: <span class="txt" id="bm_inited">false</span></li>
-            <li>available: <span class="txt" id="bm_available">false</span></li>
-            <li>type: <span class="txt" id="bm_type"></span></li>
-            <li>access_requested: <span class="txt" id="bm_access_requested">false</span> (<a href="javascript:;" onclick="return DemoApp.biometricRequestAccess(this);">Request access</a>) <span></span></li>
-            <li>access_granted: <span class="txt" id="bm_access_granted">false</span> <span id="bm_settings" style="display:none;">(<a href="javascript:;" onclick="return DemoApp.biometricOpenSettings(this);">Open settings</a>)</span></li>
-            <li>token_saved: <span class="txt" id="bm_token_saved">false</span> (<a href="javascript:;" onclick="return DemoApp.biometricSetToken(this);">Set token</a>, <a href="javascript:;" onclick="return DemoApp.biometricRemoveToken(this);">Remove token</a>) <span></span></li>
-            <li>device_id: <span class="txt" id="bm_device_id"></span></li>
-            <li><a href="javascript:;" onclick="return DemoApp.biometricRequestAuth(this);">Request auth</a> <span></span></li>
-        </ul>
-    </div>
-
-    <p>Location:</p>
-    <div class="columns">
-        <ul>
-            <li>isInited: <span class="txt" id="loc_inited">false</span></li>
-            <li>available: <span class="txt" id="loc_available">false</span></li>
-            <li>access_requested: <span class="txt" id="loc_access_requested">false</span> (<a href="javascript:;" onclick="return DemoApp.locationGet(this);">Request location</a>) <span></span></li>
-            <li>access_granted: <span class="txt" id="loc_access_granted">false</span>
-                <span id="loc_settings" style="display:none;">(<a href="javascript:;" onclick="return DemoApp.locationOpenSettings(this);">Open settings</a>)</span>
-            </li>
-        </ul>
-    </div>
-
-    <pre><code id="webview_data"></code></pre>
-    <div class="hint">
-        Data passed to webview.
-        <span id="webview_data_status" class="status_need">Checking hash...</span>,
-        <span id="webview_data_sign_status">checking signature...</span>
-    </div>
-    <pre><code id="theme_data"></code></pre>
-    <div class="hint">
-        Theme params
-    </div>
-    <div class="hint">
-        Version: <span id="ver"></span>,
-        platform: <span id="platform"></span>
-    </div>
-    <div class="hint">
-        <span id="cur_activity"></span><span id="prev_activity"></span>
-    </div>
-</section>
-
-<div class="safe-area-border"></div>
-<div class="tg-safe-area-border">
-    <div class="tg-content-safe-area-border"></div>
+	</div>
+  <section id="contentyy">
+	<h1 style="padding: 40px 0px 0px 0px;">Яндекс.Игры</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/2977039/2a00000193a7b7a865bf76d7dd104b6f4305/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1881364/2a00000193a365ef9dac4684fe7235f00f15/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1890793/2a00000193bca2fd67dd1c55b2c48aa6b6f1/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1881957/2a00000193b03ceac6336e7072255c1c8ff4/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1890793/2a00000193b1843e894de6829ac8b797f7ca/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
 </div>
-<div class="viewport-border"></div>
-<div class="viewport-stable_border"></div>
-
-<script type="application/javascript">
-
-    /*
-     * This is a demo code for Telegram WebApp for Bots
-     * It contains basic examples of how to use the API
-     * Note: all requests to backend are disabled in this demo, you should use your own backend
-     */
-
-    const DemoApp = {
-        initData      : Telegram.WebApp.initData || '',
-        initDataUnsafe: Telegram.WebApp.initDataUnsafe || {},
-        MainButton: Telegram.WebApp.MainButton,
-        SecondaryButton: Telegram.WebApp.SecondaryButton,
-        BackButton: Telegram.WebApp.BackButton,
-        SettingsButton: Telegram.WebApp.SettingsButton,
-
-        init: function(options) {
-            document.body.style.visibility = '';
-            Telegram.WebApp.ready();
-
-            Telegram.WebApp.MainButton.setParams({
-                text: 'Close Webview',
-                has_shine_effect: true,
-                is_visible: true
-            }).onClick(DemoApp.close);
-
-            Telegram.WebApp.SecondaryButton.setParams({
-                text: 'Do Something',
-                is_visible: true
-            }).onClick(DemoApp.moveSecondaryButton);
-
-            Telegram.WebApp.BackButton.onClick(function() {
-                DemoApp.showAlert('Back button pressed');
-            });
-
-            Telegram.WebApp.SettingsButton.onClick(function() {
-                DemoApp.showAlert('Settings opened!');
-            });
-        },
-
-        expand() {
-            Telegram.WebApp.expand();
-        },
-        close() {
-            Telegram.WebApp.close();
-        },
-        toggleMainButton(el) {
-            const mainButton = Telegram.WebApp.MainButton
-            if (mainButton.isVisible) {
-                mainButton.hide()
-                el.innerHTML = 'Show Main Button'
-            } else {
-                mainButton.show()
-                el.innerHTML = 'Hide Main Button'
-            }
-        },
-        toggleSecondaryButton(el) {
-            if (DemoApp.SecondaryButton.isVisible) {
-                DemoApp.SecondaryButton.hide()
-                el.innerHTML = 'Show Secondary Button'
-            } else {
-                DemoApp.SecondaryButton.show();
-                el.innerHTML = 'Hide Secondary Button'
-            }
-        },
-        toggleButtonsProgress(el) {
-            if (DemoApp.MainButton.isProgressVisible) {
-                DemoApp.MainButton.hideProgress()
-                DemoApp.SecondaryButton.hideProgress()
-                el.innerHTML = 'Show Progress'
-            } else {
-                DemoApp.MainButton.showProgress()
-                DemoApp.SecondaryButton.showProgress()
-                el.innerHTML = 'Hide Progress'
-            }
-        },
-        moveSecondaryButton(el) {
-            const sButton = DemoApp.SecondaryButton
-            if (sButton.position === 'left') {
-                sButton.position = 'top'
-            } else if (sButton.position === 'top') {
-                sButton.position = 'right'
-            } else if (sButton.position === 'right') {
-                sButton.position = 'bottom'
-            } else if (sButton.position === 'bottom') {
-                sButton.position = 'left'
-            }
-        },
-        toggleBackButton(el) {
-            if (DemoApp.BackButton.isVisible) {
-                DemoApp.BackButton.hide()
-                el.innerHTML = 'Show Back Button'
-            } else {
-                DemoApp.BackButton.show()
-                el.innerHTML = 'Hide Back Button'
-            }
-        },
-        toggleSettingsButton(el) {
-            if (DemoApp.SettingsButton.isVisible) {
-                DemoApp.SettingsButton.hide()
-                el.innerHTML = 'Show Settings Button'
-            } else {
-                DemoApp.SettingsButton.show()
-                el.innerHTML = 'Hide Settings Button'
-            }
-        },
-        toggleSwipeBehavior(el) {
-            if (Telegram.WebApp.isVerticalSwipesEnabled) {
-                Telegram.WebApp.disableVerticalSwipes()
-                el.innerHTML = 'Enable Vertical Swypes'
-            } else {
-                Telegram.WebApp.enableVerticalSwipes()
-                el.innerHTML = 'Disable Vertical Swypes'
-            }
-        },
-        toggleOrientationLock(el) {
-            if (Telegram.WebApp.isOrientationLocked) {
-                Telegram.WebApp.unlockOrientation()
-                el.innerHTML = 'Lock Orientation'
-            } else {
-                Telegram.WebApp.lockOrientation()
-                el.innerHTML = 'Unlock Orientation'
-            }
-        },
-        fullscreenInit() {
-            Telegram.WebApp.onEvent('fullscreenChanged', function() {
-                DemoApp.updateFullscreenButton()
-            })
-            Telegram.WebApp.onEvent('fullscreenFailed', function(params) {
-                DemoApp.showAlert('fullscreenFailed: ' + params.error)
-            })
-            DemoApp.updateFullscreenButton()
-        },
-        toggleFullscreen(el) {
-            if (Telegram.WebApp.isFullscreen) {
-                Telegram.WebApp.exitFullscreen()
-            } else {
-                Telegram.WebApp.requestFullscreen()
-            }
-        },
-        updateFullscreenButton() {
-            const fullscreenBtn = document.getElementById('fullscreen_btn')
-            if (Telegram.WebApp.isFullscreen) {
-                fullscreenBtn.innerHTML = 'Exit Fullscreen'
-            } else {
-                fullscreenBtn.innerHTML = 'Request Fullscreen'
-            }
-        },
-
-        // accelerometer
-        accelerometerInit() {
-            Telegram.WebApp.onEvent('accelerometerStarted', function() {
-                const span = document.getElementById('accelerometer_btn').nextElementSibling;
-                span.textContent = '';
-                span.className = '';
-                DemoApp.updateAccelerometerLink();
-            })
-
-            Telegram.WebApp.onEvent('accelerometerStopped', function() {
-                const span = document.getElementById('accelerometer_btn').nextElementSibling;
-                span.textContent = '';
-                span.className = '';
-                DemoApp.updateAccelerometerLink();
-            })
-
-            Telegram.WebApp.onEvent('accelerometerChanged', function() {
-                const span = document.getElementById('accelerometer_btn').nextElementSibling;
-                span.textContent = '(x: ' + this.Accelerometer.x + '; y: ' + this.Accelerometer.y + '; z: ' + this.Accelerometer.z + ')';
-                span.className = 'ok';
-            })
-
-            Telegram.WebApp.onEvent('accelerometerFailed', function(params) {
-                const span = document.getElementById('accelerometer_btn').nextElementSibling;
-                span.textContent = '(ERR: ' + params.error + ')';
-                span.className = 'err';
-            })
-
-            DemoApp.updateAccelerometerLink()
-        },
-        toggleAccelerometer: function(el) {
-            if (Telegram.WebApp.Accelerometer.isStarted) {
-                Telegram.WebApp.Accelerometer.stop();
-            } else {
-                Telegram.WebApp.Accelerometer.start({ refresh_rate: 100 });
-            }
-        },
-        updateAccelerometerLink() {
-            var accelerometerBtn = document.getElementById('accelerometer_btn');
-            if (Telegram.WebApp.Accelerometer.isStarted) {
-                accelerometerBtn.innerHTML = 'Stop Accelerometer';
-            } else {
-                accelerometerBtn.innerHTML = 'Start Accelerometer';
-            }
-        },
-
-        // device orientation
-        deviceOrientationInit() {
-            Telegram.WebApp.onEvent('deviceOrientationStarted', function() {
-                var span = document.getElementById('device_orientation_btn').nextElementSibling;
-                span.textContent = '';
-                span.className = '';
-                DemoApp.updateDeviceOrientationLink();
-            })
-
-            Telegram.WebApp.onEvent('deviceOrientationStopped', function() {
-                var span = document.getElementById('device_orientation_btn').nextElementSibling;
-                span.textContent = '';
-                span.className = '';
-                DemoApp.updateDeviceOrientationLink();
-            })
-
-            Telegram.WebApp.onEvent('deviceOrientationChanged', function() {
-                var span = document.getElementById('device_orientation_btn').nextElementSibling;
-                span.textContent = '(alpha: ' + this.DeviceOrientation.alpha +
-                    '; beta: ' + this.DeviceOrientation.beta +
-                    '; gamma: ' + this.DeviceOrientation.gamma +
-                    '; absolute: ' + (this.DeviceOrientation.absolute ? 'true' : 'false') + ')';
-                span.className = 'ok';
-            })
-
-            Telegram.WebApp.onEvent('deviceOrientationFailed', function(params) {
-                var span = document.getElementById('device_orientation_btn').nextElementSibling;
-                span.textContent = '(ERR: ' + params.error + ')';
-                span.className = 'err';
-            })
-
-            DemoApp.updateDeviceOrientationLink()
-        },
-        toggleDeviceOrientation(el, need_absolute) {
-            if (Telegram.WebApp.DeviceOrientation.isStarted) {
-                Telegram.WebApp.DeviceOrientation.stop();
-            } else {
-                Telegram.WebApp.DeviceOrientation.start({ refresh_rate: 100, need_absolute: need_absolute });
-            }
-        },
-        updateDeviceOrientationLink() {
-            var deviceOrientationBtn = document.getElementById('device_orientation_btn');
-            var absItem = document.getElementById('device_orientation_abs_item');
-
-            if (Telegram.WebApp.DeviceOrientation.isStarted) {
-                deviceOrientationBtn.innerHTML = 'Stop DeviceOrientation';
-                absItem.style.display = 'none';
-            } else {
-                deviceOrientationBtn.innerHTML = 'Start DeviceOrientation(need_absolute=false)';
-                absItem.style.display = 'block';
-            }
-        },
-
-        // gyroscope
-        gyroscopeInit() {
-            Telegram.WebApp.onEvent('gyroscopeStarted', function() {
-                var span = document.getElementById('gyroscope_btn').nextElementSibling;
-                span.textContent = '';
-                span.className = '';
-                DemoApp.updateGyroscopeLink();
-            })
-
-            Telegram.WebApp.onEvent('gyroscopeStopped', function() {
-                var span = document.getElementById('gyroscope_btn').nextElementSibling;
-                span.textContent = '';
-                span.className = '';
-                DemoApp.updateGyroscopeLink();
-            })
-
-            Telegram.WebApp.onEvent('gyroscopeChanged', function() {
-                var span = document.getElementById('gyroscope_btn').nextElementSibling;
-                span.textContent = '(x: ' + this.Gyroscope.x + '; y: ' + this.Gyroscope.y + '; z: ' + this.Gyroscope.z + ')';
-                span.className = 'ok';
-            })
-
-            Telegram.WebApp.onEvent('gyroscopeFailed', function(params) {
-                var span = document.getElementById('gyroscope_btn').nextElementSibling;
-                span.textContent = '(ERR: ' + params.error + ')';
-                span.className = 'err';
-            })
-
-            DemoApp.updateGyroscopeLink()
-        },
-        toggleGyroscope(el) {
-            if (Telegram.WebApp.Gyroscope.isStarted) {
-                Telegram.WebApp.Gyroscope.stop();
-            } else {
-                Telegram.WebApp.Gyroscope.start({ refresh_rate: 100 });
-            }
-        },
-        updateGyroscopeLink() {
-            var gyroscopeBtn = document.getElementById('gyroscope_btn');
-            if (Telegram.WebApp.Gyroscope.isStarted) {
-                gyroscopeBtn.innerHTML = 'Stop Gyroscope';
-            } else {
-                gyroscopeBtn.innerHTML = 'Start Gyroscope';
-            }
-        },
-
-        // location
-        locationInit(el) {
-            const locationManager = Telegram.WebApp.LocationManager;
-
-            if (!DemoApp.locationInited) {
-                DemoApp.locationInited = true;
-                Telegram.WebApp.onEvent('locationManagerUpdated', function() {
-                    document.getElementById('loc_inited').textContent = locationManager.isInited ? 'true' : 'false';
-                    document.getElementById('loc_available').textContent = locationManager.isLocationAvailable ? 'true' : 'false';
-                    document.getElementById('loc_access_requested').textContent = locationManager.isAccessRequested ? 'true' : 'false';
-                    document.getElementById('loc_access_granted').textContent = locationManager.isAccessGranted ? 'true' : 'false';
-                    document.getElementById('loc_settings').style.display = (locationManager.isLocationAvailable && locationManager.isAccessRequested && !locationManager.isAccessGranted) ? 'block' : 'none';
-                });
-            }
-            locationManager.init();
-        },
-        locationGet(el) {
-            const locationManager = Telegram.WebApp.LocationManager;
-            if (!locationManager.isInited) {
-                return DemoApp.showAlert('Location not inited yet!');
-            }
-
-            locationManager.getLocation(function(location_data) {
-                const span = el.nextElementSibling;
-                if (location_data) {
-                    span.textContent = '(' + JSON.stringify(location_data) + ')';
-                    span.className = 'ok';
-                } else {
-                    span.textContent = '(Request declined)';
-                    span.className = 'err';
-                }
-            })
-        },
-        locationOpenSettings(el) {
-            const locationManager = Telegram.WebApp.LocationManager;
-            if (!locationManager.isInited) {
-                return DemoApp.showAlert('Location not inited yet!');
-            }
-
-            if (!locationManager.isLocationAvailable || !locationManager.isAccessRequested || locationManager.isAccessGranted) {
-                return false;
-            }
-
-            locationManager.openSettings();
-        },
-
-        // version to string Example: '6.9'
-        doesntSupport(version) {
-            // console.log("version: " + version);
-            // console.log("realVersion: " + this.version());
-            // console.log("doesntSupport: " + this.isVersionAtLeast(version));
-            if (!this.isVersionAtLeast(version)) {
-                Telegram.WebApp.showAlert('This feature is not supported in this version of Telegram', function () {
-                    Telegram.WebApp.close();
-                });
-                throw new Error('This feature is not supported in this version of Telegram');
-            }
-        },
-
-        // actions
-        sendMessage(msg_id, with_webview) {
-            if (!DemoApp.initDataUnsafe.query_id) {
-                alert('WebViewQueryId not defined');
-                return;
-            }
-
-            document.querySelectorAll('button').forEach((btn) => btn.disabled = true);
-
-            const btn       = document.querySelector('#btn_status');
-            btn.textContent = 'Sending...';
-
-            DemoApp.apiRequest('sendMessage', {
-                msg_id      : msg_id || '',
-                with_webview: !DemoApp.initDataUnsafe.receiver && with_webview ? 1 : 0
-            }, function (result) {
-                document.querySelectorAll('button').forEach((btn) => btn.disabled = false);
-
-                if (result.response) {
-                    if (result.response.ok) {
-                        btn.textContent   = 'Message sent successfully!';
-                        btn.className     = 'ok';
-                        btn.style.display = 'block';
-                    } else {
-                        btn.textContent   = result.response.description;
-                        btn.className     = 'err';
-                        btn.style.display = 'block';
-                        alert(result.response.description);
-                    }
-                } else if (result.error) {
-                    btn.textContent   = result.error;
-                    btn.className     = 'err';
-                    btn.style.display = 'block';
-                    alert(result.error);
-                } else {
-                    btn.textContent   = 'Unknown error';
-                    btn.className     = 'err';
-                    btn.style.display = 'block';
-                    alert('Unknown error');
-                }
-            });
-        },
-        changeMenuButton(close) {
-            document.querySelectorAll('button').forEach((btn) => btn.disabled = true);
-            const btnStatus       = document.querySelector('#btn_status');
-            btnStatus.textContent = 'Changing button...';
-
-            DemoApp.apiRequest('changeMenuButton', {}, function (result) {
-                document.querySelectorAll('button').forEach((btn) => btn.disabled = false);
-
-                if (result.response) {
-                    if (result.response.ok) {
-                        btnStatus.textContent   = 'Button changed!';
-                        btnStatus.className     = 'ok';
-                        btnStatus.style.display = 'block';
-                        Telegram.WebApp.close();
-                    } else {
-                        btnStatus.textContent   = result.response.description;
-                        btnStatus.className     = 'err';
-                        btnStatus.style.display = 'block';
-                        alert(result.response.description);
-                    }
-                } else if (result.error) {
-                    btnStatus.textContent   = result.error;
-                    btnStatus.className     = 'err';
-                    btnStatus.style.display = 'block';
-                    alert(result.error);
-                } else {
-                    btnStatus.textContent   = 'Unknown error';
-                    btnStatus.className     = 'err';
-                    btnStatus.style.display = 'block';
-                    alert('Unknown error');
-                }
-            });
-            if (close) {
-                setTimeout(function () {
-                    Telegram.WebApp.close();
-                }, 50);
-            }
-        },
-        checkInitData() {
-            const webViewStatus = document.querySelector('#webview_data_status');
-            if (DemoApp.initDataUnsafe.query_id &&
-                DemoApp.initData &&
-                webViewStatus.classList.contains('status_need')
-            ) {
-                webViewStatus.classList.remove('status_need');
-                DemoApp.apiRequest('checkInitData', {}, function (result) {
-                    if (result.ok) {
-                        webViewStatus.textContent = 'Hash is correct (async)';
-                        webViewStatus.className   = 'ok';
-                    } else {
-                        webViewStatus.textContent = result.error + ' (async)';
-                        webViewStatus.className   = 'err';
-                    }
-                });
-            }
-        },
-        sendText(spam) {
-            const textField = document.querySelector('#text_field');
-            const text      = textField.value;
-            if (!text.length) {
-                return textField.focus();
-            }
-            if (byteLength(text) > 4096) {
-                return alert('Text is too long');
-            }
-
-            const repeat = spam ? 10 : 1;
-            for (let i = 0; i < repeat; i++) {
-                Telegram.WebApp.sendData(text);
-            }
-        },
-        sendTime(spam) {
-            const repeat = spam ? 10 : 1;
-            for (let i = 0; i < repeat; i++) {
-                Telegram.WebApp.sendData(new Date().toString());
-            }
-        },
-        switchInlineQuery(query, chooseChat) {
-            if (chooseChat) {
-                const chatTypes = []
-                const types = ['users', 'bots', 'groups', 'channels'];
-                for (let i = 0; i < types.length; i++) {
-                    const el = document.getElementById('select-' + types[i]);
-                    if (el.checked) {
-                        chatTypes.push(types[i]);
-                    }
-                }
-
-                if (!chooseChatTypes.length) {
-                    return DemoApp.showAlert('Select chat types!');
-                }
-
-                Telegram.WebApp.switchInlineQuery(query, chatTypes)
-            }
-
-            Telegram.WebApp.switchInlineQuery(query, false)
-        },
-
-        // Alerts
-        showAlert(message) {
-            Telegram.WebApp.showAlert(message);
-        },
-        showConfirm(message) {
-            Telegram.WebApp.showConfirm(message);
-        },
-        requestContact() {
-            Telegram.WebApp.requestContact(function (result) {
-                if (result) {
-                    DemoApp.showAlert('Contact granted');
-                } else {
-                    DemoApp.showAlert('Contact denied');
-                }
-            });
-        },
-        isVersionAtLeast(version) {
-            return Telegram.WebApp.isVersionAtLeast(version);
-        },
-        showPopup() {
-            Telegram.WebApp.showPopup({
-                title  : 'Popup title',
-                message: 'Popup message',
-                buttons: [
-                    {id: 'delete', type: 'destructive', text: 'Delete all'},
-                    {id: 'faq', type: 'default', text: 'Open FAQ'},
-                    {type: 'cancel'},
-                ]
-            }, function (buttonId) {
-                if (buttonId === 'delete') {
-                    DemoApp.showAlert("'Delete all' selected");
-                } else if (buttonId === 'faq') {
-                    Telegram.WebApp.openLink('https://telegram.org/faq');
-                }
-            });
-        },
-        showScanQrPopup: function (linksOnly) {
-            Telegram.WebApp.showScanQrPopup({
-                text: linksOnly ? 'with any link' : 'for test purposes'
-            }, function (text) {
-                if (linksOnly) {
-                    const lowerText = text.toString().toLowerCase();
-                    if (lowerText.substring(0, 7) === 'http://' ||
-                        lowerText.substring(0, 8) === 'https://'
-                    ) {
-                        setTimeout(function () {
-                            Telegram.WebApp.openLink(text);
-                        }, 50);
-
-                        return true;
-                    }
-                } else {
-                    DemoApp.showAlert(text);
-
-                    return true;
-                }
-            });
-        },
-
-        // Permissions
-        requestLocation(el) {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    el.nextElementSibling.innerHTML = '(' + position.coords.latitude + ', ' + position.coords.longitude + ')';
-                    el.nextElementSibling.className = 'ok';
-                });
-            } else {
-                el.nextElementSibling.innerHTML = 'Geolocation is not supported in this browser.';
-                el.nextElementSibling.className = 'err';
-            }
-            return false;
-        },
-        requestVideo(el) {
-            if (navigator.mediaDevices) {
-                navigator.mediaDevices.getUserMedia({audio: false, video: true}).then(function (stream) {
-                    el.nextElementSibling.innerHTML = '(Access granted)';
-                });
-            } else {
-                el.nextElementSibling.innerHTML = 'Media devices is not supported in this browser.';
-                el.nextElementSibling.className = 'err';
-            }
-            return false;
-        },
-        requestAudio(el) {
-            if (navigator.mediaDevices) {
-                navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(function (stream) {
-                    el.nextElementSibling.innerHTML = '(Access granted)';
-                    el.nextElementSibling.className = 'ok';
-                });
-            } else {
-                el.nextElementSibling.innerHTML = 'Media devices is not supported in this browser.';
-                el.nextElementSibling.className = 'err';
-            }
-            return false;
-        },
-        requestAudioVideo(el) {
-            if (navigator.mediaDevices) {
-                navigator.mediaDevices.getUserMedia({audio: true, video: true}).then(function (stream) {
-                    el.nextElementSibling.innerHTML = '(Access granted)';
-                    el.nextElementSibling.className = 'ok';
-                });
-            } else {
-                el.nextElementSibling.innerHTML = 'Media devices is not supported in this browser.';
-                el.nextElementSibling.className = 'err';
-            }
-            return false;
-        },
-        testClipboard(el) {
-            Telegram.WebApp.readTextFromClipboard(function (clipText) {
-                if (clipText === null) {
-                    el.nextElementSibling.innerHTML = 'Clipboard text unavailable.';
-                    el.nextElementSibling.className = 'err';
-                } else {
-                    el.nextElementSibling.innerHTML = '(Read from clipboard: Â«' + clipText + 'Â»)';
-                    el.nextElementSibling.className = 'ok';
-                }
-            });
-            return false;
-        },
-        requestWriteAccess(el) {
-            Telegram.WebApp.requestWriteAccess(function(allowed) {
-                if (allowed) {
-                    el.nextElementSibling.innerHTML = '(Access granted)'
-                    el.nextElementSibling.className = 'ok'
-                } else {
-                    el.nextElementSibling.innerHTML = '(User declined this request)'
-                    el.nextElementSibling.className = 'err'
-                }
-            })
-        },
-        requestPhoneNumber(el) {
-            Telegram.WebApp.requestContact(function(sent, event) {
-                if (sent) {
-                    el.nextElementSibling.innerHTML = '(Phone number sent to the bot' + (event && event.responseUnsafe && event.responseUnsafe.contact && event.responseUnsafe.contact.phone_number ? ': +' + event.responseUnsafe.contact.phone_number : '') + ')'
-                    el.nextElementSibling.className = 'ok'
-                } else {
-                    el.nextElementSibling.innerHTML = '(User declined this request)'
-                    el.nextElementSibling.className = 'err'
-                }
-            })
-        },
-        requestServerTime(el) {
-            Telegram.WebApp.invokeCustomMethod('getCurrentTime', {}, function(err, time) {
-                if (err) {
-                    el.nextElementSibling.innerHTML = '(' + err + ')'
-                    el.nextElementSibling.className = 'err'
-                } else {
-                    el.nextElementSibling.innerHTML = '(' + (new Date(time * 1000)).toString() + ')'
-                    el.nextElementSibling.className = 'ok'
-                }
-            });
-        },
-
-        // cloud storage
-        cloudStorageKeys: {},
-        cloudStorageItems: {},
-        editCloudRow(el, event) {
-            event.preventDefault();
-            const values = DemoApp.cloudStorageItems
-            const key = el.closest('tr').getAttribute('data-key')
-            el.form.reset();
-            el.form.key.value = key;
-            el.form.value.value = values[key];
-        },
-        deleteCloudRow(el, event) {
-            event.preventDefault();
-            const key = el.closest('tr').getAttribute('data-key')
-            Telegram.WebApp.CloudStorage.removeItem(key, function(err, deleted) {
-                if (err) {
-                    DemoApp.showAlert('Error: ' + err);
-                } else {
-                    if (deleted) {
-                        const index = DemoApp.cloudStorageKeys.indexOf(key);
-                        if (index >= 0) {
-                            DemoApp.cloudStorageKeys.splice(index, 1);
-                        }
-                        delete DemoApp.cloudStorageItems[key];
-                    }
-                    el.form.reset();
-                    DemoApp.updateCloudRows();
-                }
-            });
-        },
-        saveCloudForm(form, event) {
-            event.preventDefault();
-            const key = form.key.value
-            const value = form.value.value
-            Telegram.WebApp.CloudStorage.setItem(key, value, function(err, saved) {
-                if (err) {
-                    DemoApp.showAlert('Error: ' + err);
-                } else {
-                    if (saved) {
-                        if (typeof DemoApp.cloudStorageItems[key] === 'undefined') {
-                            DemoApp.cloudStorageKeys.push(key);
-                        }
-                        DemoApp.cloudStorageItems[key] = value;
-                    }
-                    form.reset();
-                    DemoApp.updateCloudRows();
-                }
-            });
-        },
-        updateCloudRows() {
-            let html = '';
-            const keys = DemoApp.cloudStorageKeys;
-            const values = DemoApp.cloudStorageItems;
-            for (let i = 0; i < keys.length; i++) {
-                const key = keys[i];
-                html += '<tr data-key="'+cleanHTML(key)+'"><td>'+cleanHTML(key)+'</td><td>'+cleanHTML(values[key])+'</td><td><button onclick="DemoApp.editCloudRow(this, event);">Edit</button><button onclick="DemoApp.deleteCloudRow(this, event);">Delete</button></td></tr>';
-            }
-
-            document.getElementById('cloud_rows').innerHTML = html
-        },
-        loadCloudKeys(el) {
-            Telegram.WebApp.CloudStorage.getKeys(function(err, keys) {
-                if (err) {
-                    DemoApp.showAlert('Error: ' + err);
-                } else {
-                    if (keys.length > 0) {
-                        Telegram.WebApp.CloudStorage.getItems(keys, function(err, values) {
-                            if (err) {
-                                DemoApp.showAlert('Error: ' + err);
-                            } else {
-                                DemoApp.cloudStorageKeys = keys;
-                                DemoApp.cloudStorageItems = {};
-                                for (let i = 0; i < keys.length; i++) {
-                                    const key = keys[i];
-                                    DemoApp.cloudStorageItems[key] = values[key];
-                                }
-                                DemoApp.updateCloudRows();
-                            }
-                        });
-                    }
-                }
-            });
-        },
-
-        // biometrics
-        biometricInit(el) {
-            const biometricManager = Telegram.WebApp.BiometricManager;
-            if (!DemoApp.biometricInited) {
-                DemoApp.biometricInited = true;
-                Telegram.WebApp.onEvent('biometricManagerUpdated', function() {
-                    document.getElementById('bm_inited').textContent = biometricManager.isInited ? 'true' : 'false'
-                    document.getElementById('bm_available').textContent = biometricManager.isBiometricAvailable ? 'true' : 'false'
-                    document.getElementById('bm_type').textContent = biometricManager.biometricType || ''
-                    document.getElementById('bm_access_requested').textContent = biometricManager.isAccessRequested ? 'true' : 'false'
-                    document.getElementById('bm_access_granted').textContent = biometricManager.isAccessGranted ? 'true' : 'false'
-                    document.getElementById('bm_token_saved').textContent = biometricManager.isBiometricTokenSaved ? 'true' : 'false'
-                    document.getElementById('bm_device_id').textContent = biometricManager.deviceId || ''
-                    document.getElementById('bm_settings').style.display = biometricManager.isBiometricAvailable && biometricManager.isAccessRequested && !biometricManager.isAccessGranted ? 'block' : 'none'
-                });
-            }
-
-            biometricManager.init();
-        },
-        biometricRequestAccess(el) {
-            const biometricManager = Telegram.WebApp.BiometricManager;
-            if (!biometricManager.isInited) {
-                return DemoApp.showAlert('Biometric not inited yet!');
-            }
-
-            biometricManager.requestAccess({reason: 'The bot uses biometrics for testing purposes.'}, function(access_granted) {
-                if (access_granted) {
-                    el.nextElementSibling.innerHTML = '(Access granted)';
-                    el.nextElementSibling.className = 'ok';
-                } else {
-                    el.nextElementSibling.innerHTML = '(Request declined)';
-                    el.nextElementSibling.className = 'err';
-                }
-            });
-        },
-        biometricRequestAuth(el) {
-            const biometricManager = Telegram.WebApp.BiometricManager;
-            if (!biometricManager.isInited) {
-                return DemoApp.showAlert('Biometric not inited yet!');
-            }
-
-            el.nextElementSibling.innerHTML = '';
-            el.nextElementSibling.classList.remove('ok', 'err')
-
-            biometricManager.authenticate({reason: 'The bot requests biometrics for testing purposes.'}, function(success, token) {
-                if (success) {
-                    el.nextElementSibling.innerHTML = '(Success, token: ' + token + ')';
-                    el.nextElementSibling.className = 'ok';
-                } else {
-                    el.nextElementSibling.innerHTML = '(Failed)';
-                    el.nextElementSibling.className = 'err';
-                }
-            });
-        },
-        biometricOpenSettings(el) {
-            const biometricManager = Telegram.WebApp.BiometricManager;
-            if (!biometricManager.isInited) {
-                return DemoApp.showAlert('Biometric not inited yet!');
-            }
-
-            if (!biometricManager.isBiometricAvailable ||
-                !biometricManager.isAccessRequested ||
-                biometricManager.isAccessGranted) {
-                return false;
-            }
-
-            biometricManager.openSettings();
-        },
-        biometricSetToken(el) {
-            const biometricManager = Telegram.WebApp.BiometricManager;
-            if (!biometricManager.isInited) {
-                return DemoApp.showAlert('Biometric not inited yet!');
-            }
-
-            const token = parseInt(Math.random().toString().substring(2)).toString(16);
-            biometricManager.updateBiometricToken(token, function(updated) {
-                if (updated) {
-                    document.getElementById('bm_token_saved').textContent = biometricManager.isBiometricTokenSaved ? 'true' : 'false'
-                    el.nextElementSibling.innerHTML = '(Updated: ' + token + ')'
-                    el.nextElementSibling.className = 'ok'
-                } else {
-                    el.nextElementSibling.innerHTML = '(Failed)'
-                    el.nextElementSibling.className = 'err'
-                }
-            });
-        },
-        biometricRemoveToken(el) {
-            const biometricManager = Telegram.WebApp.BiometricManager;
-            if (!biometricManager.isInited) {
-                return DemoApp.showAlert('Biometric not inited yet!');
-            }
-
-            biometricManager.updateBiometricToken('', function(updated) {
-                if (updated) {
-                    document.getElementById('bm_token_saved').textContent = biometricManager.isBiometricTokenSaved ? 'true' : 'false'
-                    el.nextElementSibling.innerHTML = '(Removed)'
-                    el.nextElementSibling.className = 'ok'
-                } else {
-                    el.nextElementSibling.innerHTML = '(Failed)'
-                    el.nextElementSibling.className = 'err'
-                }
-            });
-        },
-
-        // home screen
-        homeScreenInit() {
-            Telegram.WebApp.onEvent('homeScreenAdded', function(params) {
-                const span = document.getElementById('add_to_home_btn').nextElementSibling;
-                span.textContent = '(added!)';
-                span.className = 'ok';
-            })
-        },
-        addToHomeScreen(el) {
-            Telegram.WebApp.addToHomeScreen()
-        },
-        checkHomeScreenStatus(el) {
-            Telegram.WebApp.checkHomeScreenStatus(function(status) {
-                const span = el.nextElementSibling;
-                span.textContent = '(status: ' + status + ')';
-                span.className = 'ok';
-            })
-        },
-
-        // emoji status
-        emojiStatusInit: function() {
-            Telegram.WebApp.onEvent('emojiStatusFailed', function(params) {
-                DemoApp.showAlert('emojiStatusFailed: ' + params.error);
-            })
-        },
-        setEmojiStatus: function(el, custom_emoji_id, duration) {
-            Telegram.WebApp.setEmojiStatus(custom_emoji_id, duration ? {duration: duration} : {}, function(result) {
-                const span = el.nextElementSibling;
-                if (result) {
-                    span.textContent = '(status set!)';
-                    span.className = 'ok';
-                } else {
-                    span.textContent = '(status NOT set)';
-                    span.className = 'err';
-                }
-            });
-        },
-        requestEmojiStatusAccess: function(el) {
-            Telegram.WebApp.requestEmojiStatusAccess(function(allowed) {
-                const span = el.nextElementSibling;
-                if (allowed) {
-                    span.textContent = '(Access granted)';
-                    span.className = 'ok';
-                } else {
-                    span.textContent = '(User declined this request)';
-                    span.className = 'err';
-                }
-            })
-        },
-
-        // activity
-        activityStartTime: new Date(),
-        activityPrevDuration: false,
-        activityTo: null,
-        activityInit: function() {
-            Telegram.WebApp.onEvent('activated', function(params) {
-                DemoApp.activityStartTime = new Date();
-                DemoApp.activityUpdate();
-            });
-
-            Telegram.WebApp.onEvent('deactivated', function(params) {
-                DemoApp.activityPrevDuration = new Date() - DemoApp.activityStartTime;
-                DemoApp.activityStartTime = false;
-                clearTimeout(DemoApp.activityTo);
-                DemoApp.activityUpdate();
-            });
-
-            DemoApp.activityUpdate();
-        },
-        activityUpdate: function() {
-            const curActivityElement = document.getElementById('cur_activity');
-            const prevActivityElement = document.getElementById('prev_activity');
-
-            if (Telegram.WebApp.isActive) {
-                const nowDuration = new Date() - DemoApp.activityStartTime;
-                curActivityElement.innerHTML = 'Mini App is active for <b>' + Math.round(nowDuration / 1000) + '</b> sec';
-                DemoApp.activityTo = setTimeout(DemoApp.activityUpdate, 100);
-            } else {
-                curActivityElement.innerHTML = 'Mini App is <b>inactive</b>';
-            }
-
-            if (DemoApp.activityPrevDuration !== false) {
-                const prevDuration = DemoApp.activityPrevDuration;
-                prevActivityElement.innerHTML = ', <br>previously was active for <b>' + Math.round(prevDuration / 1000) + '</b> sec';
-            }
-        },
-
-
-        // Other
-        apiRequest(method, data, onCallback) {
-            // DISABLE BACKEND FOR FRONTEND DEMO
-            // YOU CAN USE YOUR OWN REQUESTS TO YOUR OWN BACKEND
-            // CHANGE THIS CODE TO YOUR OWN
-            return onCallback && onCallback({error: 'This function (' + method + ') should send requests to your backend. Please, change this code to your own.'});
-
-            const authData = DemoApp.initData || '';
-            fetch('/demo/api', {
-                method     : 'POST',
-                body       : JSON.stringify(Object.assign(data, {
-                    _auth : authData,
-                    method: method,
-                })),
-                credentials: 'include',
-                headers    : {
-                    'Content-Type': 'application/json'
-                }
-            }).then(function (response) {
-                return response.json();
-            }).then(function (result) {
-                onCallback && onCallback(result);
-            }).catch(function (error) {
-                onCallback && onCallback({error: 'Server error'});
-            });
-        },
-        downloadFile: function(el, url, file_name) {
-            Telegram.WebApp.downloadFile({url: url, file_name: file_name}, function(result) {
-                const span = el.nextElementSibling;
-                if (result) {
-                    span.textContent = '(downloading...)';
-                    span.className = 'ok';
-                } else {
-                    span.textContent = '(declined)';
-                    span.className = 'err';
-                }
-            });
-        },
+       <br>
+	
+
+<h1 style="padding: 40px 0px 0px 0px;">Игры в Разработке</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/i?id=5df1f4ea3921e895bc8c9d143fa9d492d844a198-4438849-images-thumbs&n=13); background-size: 100% auto;">
+	<!--<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+-->	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-2.4" y="-2.4" width="28.80" height="28.80" rx="14.4" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.32914 19.4213C5.21914 19.4213 5.09914 19.3913 4.99914 19.3413L2.77914 18.2312C2.52914 18.1012 2.36914 17.8412 2.36914 17.5612V14.7812C2.36914 14.3713 2.70914 14.0312 3.11914 14.0312C3.52914 14.0312 3.86914 14.3713 3.86914 14.7812V17.0913L5.66914 18.0013C6.03914 18.1813 6.18914 18.6313 5.99914 19.0013C5.86914 19.2613 5.60914 19.4213 5.32914 19.4213Z" fill="#292D32"></path> <path d="M11.9995 22.7488C11.9395 22.7488 11.8795 22.7388 11.8295 22.7288C11.7695 22.7188 11.7095 22.6888 11.6495 22.6588L9.43947 21.5588C9.06947 21.3688 8.91947 20.9187 9.09947 20.5487C9.28947 20.1787 9.73947 20.0287 10.1095 20.2087L11.2495 20.7788V19.2188C11.2495 18.8088 11.5895 18.4688 11.9995 18.4688C12.4095 18.4688 12.7495 18.8088 12.7495 19.2188V20.7788L13.8895 20.2087C14.2595 20.0287 14.7095 20.1787 14.8995 20.5487C15.0895 20.9187 14.9395 21.3688 14.5595 21.5588L12.3495 22.6588C12.2895 22.6888 12.2295 22.7088 12.1695 22.7288C12.1095 22.7388 12.0595 22.7488 11.9995 22.7488Z" fill="#292D32"></path> <path d="M18.6702 19.4191C18.4002 19.4191 18.1302 19.2691 18.0002 19.0091C17.8102 18.6391 17.9602 18.1891 18.3402 17.9991L20.1502 17.0991V14.7891C20.1502 14.3791 20.4902 14.0391 20.9002 14.0391C21.3102 14.0391 21.6502 14.3791 21.6502 14.7891V17.5691C21.6502 17.8491 21.4902 18.1091 21.2402 18.2391L19.0002 19.3391C18.8902 19.3891 18.7802 19.4191 18.6702 19.4191Z" fill="#292D32"></path> <path d="M11.9995 14.4191C11.5895 14.4191 11.2495 14.0791 11.2495 13.6691V11.3591L9.43947 10.4591C9.06947 10.2691 8.91947 9.81907 9.09947 9.44907C9.28947 9.07907 9.73947 8.92907 10.1095 9.10907L11.9995 10.0491L13.8895 9.10907C14.2595 8.92907 14.7095 9.06907 14.8995 9.44907C15.0895 9.81907 14.9395 10.2691 14.5595 10.4591L12.7495 11.3591V13.6691C12.7495 14.0791 12.4095 14.4191 11.9995 14.4191Z" fill="#292D32"></path> <path d="M3.10938 9.96807C2.69938 9.96807 2.35938 9.62807 2.35938 9.21807V6.45807V6.44807C2.35938 6.38807 2.36938 6.32807 2.37938 6.27807C2.39938 6.18807 2.42938 6.11807 2.46938 6.04807C2.49938 5.99807 2.53938 5.95807 2.57938 5.91807C2.61938 5.87807 2.66938 5.83807 2.71938 5.80807C2.73938 5.79807 2.76938 5.77807 2.78938 5.76807L4.99938 4.65807C5.36938 4.47807 5.81938 4.62807 5.99938 4.99807C6.18938 5.36807 6.03938 5.81807 5.66938 5.99807L4.78938 6.43807L5.66938 6.87807C6.03938 7.06807 6.18938 7.51807 5.99938 7.88807C5.81938 8.25807 5.36938 8.40807 4.99938 8.22807L3.85938 7.65807V9.21807C3.85938 9.63807 3.52937 9.96807 3.10938 9.96807Z" fill="#292D32"></path> <path d="M14.2198 3.85859C14.1098 3.85859 13.9898 3.82859 13.8898 3.77859L11.9998 2.83859L10.1098 3.77859C9.73981 3.96859 9.28981 3.81859 9.10981 3.44859C8.91981 3.07859 9.06981 2.62859 9.43981 2.43859L11.6598 1.32859C11.8698 1.21859 12.1198 1.21859 12.3298 1.32859L14.5498 2.43859C14.9198 2.62859 15.0698 3.07859 14.8898 3.44859C14.7598 3.70859 14.4998 3.85859 14.2198 3.85859Z" fill="#292D32"></path> <path d="M20.8904 9.96807C20.4804 9.96807 20.1404 9.62807 20.1404 9.21807V7.65807L19.0004 8.22807C18.6304 8.40807 18.1804 8.25807 18.0004 7.88807C17.8104 7.51807 17.9604 7.06807 18.3404 6.87807L19.2204 6.43807L18.3304 5.99807C17.9604 5.81807 17.8104 5.36807 18.0004 4.99807C18.1904 4.62807 18.6304 4.47807 19.0004 4.65807L21.2104 5.75807C21.2304 5.76807 21.2604 5.77807 21.2804 5.79807C21.3404 5.82807 21.3904 5.87807 21.4404 5.92807C21.4704 5.96807 21.5004 6.00807 21.5304 6.04807C21.5704 6.11807 21.6004 6.18807 21.6204 6.26807C21.6304 6.32807 21.6404 6.38807 21.6404 6.43807V6.44807V9.20807C21.6404 9.63807 21.3004 9.96807 20.8904 9.96807Z" fill="#292D32"></path> </g></svg>
+ </div>
+</div>
+       <br>
+       <br>
+       <br>
+	
+
+	<h1>Транзакции в играх</h1>
+	<div id="completed">
+		<h2 style="font-size: 12px;">There's nothing here yet...</h2>
+	
+	</div>
+</div>
+
+<div id="missionsPage">
+	<div>
+  		<div id="ton-connect" style="position: absolute; top: 2%; right: 5%; z-index: 10"></div>
+  		<button id="homescreen" style="position: fixed; top: 1%; left: 5%; z-index: 10" onclick="tg.addToHomeScreen()">
+		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g clip-path="url(#clip0_429_11177)"> <path d="M19 10V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V10M21 12L12 3L3 12" stroke="#292929" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> </g> <defs> <clipPath id="clip0_429_11177"> <rect width="24" height="24" fill="white"></rect> </clipPath> </defs> </g></svg>
+		</button>
+		<p id="usdt"><span class="fancy">Подключение...</span></p>
+		<div id="hh">
+  		<div class="withdraw" onclick="trans()">Задания</div>
+		</div>
+    <!---<div id="hh">
+  		  <div class="support" onclick="getMktTokens()">Support</div>
+		</div>-->
+
+	</div>
+  <section id="contentyy">
+	<h1 style="padding: 40px 0px 0px 0px;">Яндекс.Игры</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/2977039/2a00000193a7b7a865bf76d7dd104b6f4305/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1881364/2a00000193a365ef9dac4684fe7235f00f15/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1890793/2a00000193bca2fd67dd1c55b2c48aa6b6f1/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1881957/2a00000193b03ceac6336e7072255c1c8ff4/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1890793/2a00000193b1843e894de6829ac8b797f7ca/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+</div>
+       <br>
+	
+
+<h1 style="padding: 40px 0px 0px 0px;">Игры в Разработке</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/i?id=5df1f4ea3921e895bc8c9d143fa9d492d844a198-4438849-images-thumbs&n=13); background-size: 100% auto;">
+	<!--<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+-->	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-2.4" y="-2.4" width="28.80" height="28.80" rx="14.4" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.32914 19.4213C5.21914 19.4213 5.09914 19.3913 4.99914 19.3413L2.77914 18.2312C2.52914 18.1012 2.36914 17.8412 2.36914 17.5612V14.7812C2.36914 14.3713 2.70914 14.0312 3.11914 14.0312C3.52914 14.0312 3.86914 14.3713 3.86914 14.7812V17.0913L5.66914 18.0013C6.03914 18.1813 6.18914 18.6313 5.99914 19.0013C5.86914 19.2613 5.60914 19.4213 5.32914 19.4213Z" fill="#292D32"></path> <path d="M11.9995 22.7488C11.9395 22.7488 11.8795 22.7388 11.8295 22.7288C11.7695 22.7188 11.7095 22.6888 11.6495 22.6588L9.43947 21.5588C9.06947 21.3688 8.91947 20.9187 9.09947 20.5487C9.28947 20.1787 9.73947 20.0287 10.1095 20.2087L11.2495 20.7788V19.2188C11.2495 18.8088 11.5895 18.4688 11.9995 18.4688C12.4095 18.4688 12.7495 18.8088 12.7495 19.2188V20.7788L13.8895 20.2087C14.2595 20.0287 14.7095 20.1787 14.8995 20.5487C15.0895 20.9187 14.9395 21.3688 14.5595 21.5588L12.3495 22.6588C12.2895 22.6888 12.2295 22.7088 12.1695 22.7288C12.1095 22.7388 12.0595 22.7488 11.9995 22.7488Z" fill="#292D32"></path> <path d="M18.6702 19.4191C18.4002 19.4191 18.1302 19.2691 18.0002 19.0091C17.8102 18.6391 17.9602 18.1891 18.3402 17.9991L20.1502 17.0991V14.7891C20.1502 14.3791 20.4902 14.0391 20.9002 14.0391C21.3102 14.0391 21.6502 14.3791 21.6502 14.7891V17.5691C21.6502 17.8491 21.4902 18.1091 21.2402 18.2391L19.0002 19.3391C18.8902 19.3891 18.7802 19.4191 18.6702 19.4191Z" fill="#292D32"></path> <path d="M11.9995 14.4191C11.5895 14.4191 11.2495 14.0791 11.2495 13.6691V11.3591L9.43947 10.4591C9.06947 10.2691 8.91947 9.81907 9.09947 9.44907C9.28947 9.07907 9.73947 8.92907 10.1095 9.10907L11.9995 10.0491L13.8895 9.10907C14.2595 8.92907 14.7095 9.06907 14.8995 9.44907C15.0895 9.81907 14.9395 10.2691 14.5595 10.4591L12.7495 11.3591V13.6691C12.7495 14.0791 12.4095 14.4191 11.9995 14.4191Z" fill="#292D32"></path> <path d="M3.10938 9.96807C2.69938 9.96807 2.35938 9.62807 2.35938 9.21807V6.45807V6.44807C2.35938 6.38807 2.36938 6.32807 2.37938 6.27807C2.39938 6.18807 2.42938 6.11807 2.46938 6.04807C2.49938 5.99807 2.53938 5.95807 2.57938 5.91807C2.61938 5.87807 2.66938 5.83807 2.71938 5.80807C2.73938 5.79807 2.76938 5.77807 2.78938 5.76807L4.99938 4.65807C5.36938 4.47807 5.81938 4.62807 5.99938 4.99807C6.18938 5.36807 6.03938 5.81807 5.66938 5.99807L4.78938 6.43807L5.66938 6.87807C6.03938 7.06807 6.18938 7.51807 5.99938 7.88807C5.81938 8.25807 5.36938 8.40807 4.99938 8.22807L3.85938 7.65807V9.21807C3.85938 9.63807 3.52937 9.96807 3.10938 9.96807Z" fill="#292D32"></path> <path d="M14.2198 3.85859C14.1098 3.85859 13.9898 3.82859 13.8898 3.77859L11.9998 2.83859L10.1098 3.77859C9.73981 3.96859 9.28981 3.81859 9.10981 3.44859C8.91981 3.07859 9.06981 2.62859 9.43981 2.43859L11.6598 1.32859C11.8698 1.21859 12.1198 1.21859 12.3298 1.32859L14.5498 2.43859C14.9198 2.62859 15.0698 3.07859 14.8898 3.44859C14.7598 3.70859 14.4998 3.85859 14.2198 3.85859Z" fill="#292D32"></path> <path d="M20.8904 9.96807C20.4804 9.96807 20.1404 9.62807 20.1404 9.21807V7.65807L19.0004 8.22807C18.6304 8.40807 18.1804 8.25807 18.0004 7.88807C17.8104 7.51807 17.9604 7.06807 18.3404 6.87807L19.2204 6.43807L18.3304 5.99807C17.9604 5.81807 17.8104 5.36807 18.0004 4.99807C18.1904 4.62807 18.6304 4.47807 19.0004 4.65807L21.2104 5.75807C21.2304 5.76807 21.2604 5.77807 21.2804 5.79807C21.3404 5.82807 21.3904 5.87807 21.4404 5.92807C21.4704 5.96807 21.5004 6.00807 21.5304 6.04807C21.5704 6.11807 21.6004 6.18807 21.6204 6.26807C21.6304 6.32807 21.6404 6.38807 21.6404 6.43807V6.44807V9.20807C21.6404 9.63807 21.3004 9.96807 20.8904 9.96807Z" fill="#292D32"></path> </g></svg>
+ </div>
+</div>
+       <br>
+       <br>
+       <br>
+	
+
+	<h1>Транзакции в играх</h1>
+	<div id="completed">
+		<h2 style="font-size: 12px;">There's nothing here yet...</h2>
+	
+	</div>
+</div>
+
+<div id="tokenPage">
+	<div>
+  		<button id="homescreen" style="position: fixed; top: 1%; left: 5%; z-index: 10" onclick="tg.setUserEmojiStatus(tg.initDataUnsafe.user.id, 'CAACAgIAAxkBAAELE8xnZbBWiSoo6dfCZpQchSywPLAOZQACKWAAAhrnKEsT1iLU3CQldTYE')">
+		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g clip-path="url(#clip0_429_11177)"> <path d="M19 10V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V10M21 12L12 3L3 12" stroke="#292929" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> </g> <defs> <clipPath id="clip0_429_11177"> <rect width="24" height="24" fill="white"></rect> </clipPath> </defs> </g></svg>
+		</button>
+
+		<p id="usdt"><span class="fancy">Mk.Token</span></p>
+		<div id="hh">
+  		<div class="withdraw" onclick="trans()">Поддержать</div>
+		</div>
+    <!---<div id="hh">
+  		  <div class="support" onclick="getMktTokens()">Support</div>
+		</div>-->
+
+	</div>
+	
+  <section id="contentyy">
+  <svg style="transform:rotate(-90deg);" viewBox="-25 -25 250 250" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="№250055" />
+      <stop offset="40%" stop-color="#5200a3" />
+      <stop offset="60%" stop-color="#6600ff" />
+      <stop offset="80%" stop-color="#3e00b3" />
+      <stop offset="100%" stop-color="#070055" />
+    </linearGradient>
+	<mask id="circle-mask">
+      <circle cx="150" cy="150" r="145" fill="white"/>
+      <circle cx="150" cy="150" r="140" fill="black"/>
+    </mask>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="5"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="1" />
+      </feComponentTransfer>
+      <feBlend in2="SourceGraphic" />
+    </filter>
+	<g filter="url(#glow)">      
+    <circle r="90" cx="100" cy="100" fill="transparent" stroke="#e0e0e0" stroke-width="16px" stroke-dasharray="564.48px" stroke-dashoffset="0"></circle>
+    <circle id="circle" r="90" cx="100" cy="100" stroke="url(#Gradient2)" stroke-width="16px" stroke-linecap="round" stroke-dashoffset="100.48px" fill="transparent" stroke-dasharray="660px"></circle>
+  </g>
+
+    <text id="val" x="40.5%" y="42.5%" text-anchor="middle" stroke="transparent" fill="url(#Gradient2)" font-size="22px" align="center" font-weight="bold" style="font-family: 'Manrope', sans-serif; transform:rotate(90deg) translate(0px, -196px)">#</text>
+
+  </svg>
+  <h1 id="tonBalance">875,4 / 1000 TON</h1>
+  <!---<input type="range" min="0" max="100" value="0" oninput="range(this.value)">-->
+<br>
+<script>
+    setInterval(async function() {
+        
+		//test
+
+    }, 1000);
+	window.onload = function(){
+        setTimeout(tonBalance, 2000)
+    }
+	async function tonBalance() {
+		// console.log(document.getElementById("circle").style.strokeDashoffset);
+		//const currentWallet = tonConnectUI.wallet.account.address;
+      	const ton = await fetch(`https://tonapi.io/v2/accounts/UQCwZJMC1YRv_kG2Q6CF0H74t3IcWrRjJn1aE4nDWYj_ILUp`);
+		const wallet = await ton.json();
+
+		const balance = wallet.balance / 1000000000;
+      	const truncateToThree = num => Math.floor(num * 1000) / 1000;
+
+      	console.log(truncateToThree(balance) + " TON");
+
+		percent = (truncateToThree(balance) * 100 / 1000);
+
+  		document.getElementById('circle').style.strokeDashoffset = 750 + percent * 6.6; 
+  		document.getElementById('val').innerHTML = percent + "%";
+  		document.getElementById('tonBalance').innerHTML = truncateToThree(balance) + " / 1000 TON";
+
+
+	}
+    function range(v){
+  //document.getElementById('val').innerHTML = v+"%";
+  
+}
+  </script>
+	<h1 style="padding: 40px 0px 0px 0px;">Яндекс.Игры</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/2977039/2a00000193a7b7a865bf76d7dd104b6f4305/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1881364/2a00000193a365ef9dac4684fe7235f00f15/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1890793/2a00000193bca2fd67dd1c55b2c48aa6b6f1/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1881957/2a00000193b03ceac6336e7072255c1c8ff4/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1890793/2a00000193b1843e894de6829ac8b797f7ca/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+</div>
+       <br>
+       <br>
+       <br>
+</div>
+
+<div id="gamesPage">
+	<div>
+  		<div id="ton-connect" style="position: absolute; top: 2%; right: 5%; z-index: 10"></div>
+  		<button id="homescreen" style="position: fixed; top: 1%; left: 5%; z-index: 10" onclick="tg.addToHomeScreen()">
+		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g clip-path="url(#clip0_429_11177)"> <path d="M19 10V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V10M21 12L12 3L3 12" stroke="#292929" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> </g> <defs> <clipPath id="clip0_429_11177"> <rect width="24" height="24" fill="white"></rect> </clipPath> </defs> </g></svg>
+		</button>
+		<p id="usdt"><span class="fancy">Все игры</span></p>
+		<div id="hh">
+  		<div class="withdraw" onclick="trans()">Онлайн</div>
+		</div>
+    <!---<div id="hh">
+  		  <div class="support" onclick="getMktTokens()">Support</div>
+		</div>-->
+
+	</div>
+  <section id="contentyy">
+	<h1 style="padding: 40px 0px 0px 0px;">Яндекс.Игры</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/2977039/2a00000193a7b7a865bf76d7dd104b6f4305/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1881364/2a00000193a365ef9dac4684fe7235f00f15/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1890793/2a00000193bca2fd67dd1c55b2c48aa6b6f1/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1881957/2a00000193b03ceac6336e7072255c1c8ff4/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1890793/2a00000193b1843e894de6829ac8b797f7ca/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+</div>
+       <br>
+	
+
+<h1 style="padding: 40px 0px 0px 0px;">Игры в Разработке</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/i?id=5df1f4ea3921e895bc8c9d143fa9d492d844a198-4438849-images-thumbs&n=13); background-size: 100% auto;">
+	<!--<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+-->	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-2.4" y="-2.4" width="28.80" height="28.80" rx="14.4" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.32914 19.4213C5.21914 19.4213 5.09914 19.3913 4.99914 19.3413L2.77914 18.2312C2.52914 18.1012 2.36914 17.8412 2.36914 17.5612V14.7812C2.36914 14.3713 2.70914 14.0312 3.11914 14.0312C3.52914 14.0312 3.86914 14.3713 3.86914 14.7812V17.0913L5.66914 18.0013C6.03914 18.1813 6.18914 18.6313 5.99914 19.0013C5.86914 19.2613 5.60914 19.4213 5.32914 19.4213Z" fill="#292D32"></path> <path d="M11.9995 22.7488C11.9395 22.7488 11.8795 22.7388 11.8295 22.7288C11.7695 22.7188 11.7095 22.6888 11.6495 22.6588L9.43947 21.5588C9.06947 21.3688 8.91947 20.9187 9.09947 20.5487C9.28947 20.1787 9.73947 20.0287 10.1095 20.2087L11.2495 20.7788V19.2188C11.2495 18.8088 11.5895 18.4688 11.9995 18.4688C12.4095 18.4688 12.7495 18.8088 12.7495 19.2188V20.7788L13.8895 20.2087C14.2595 20.0287 14.7095 20.1787 14.8995 20.5487C15.0895 20.9187 14.9395 21.3688 14.5595 21.5588L12.3495 22.6588C12.2895 22.6888 12.2295 22.7088 12.1695 22.7288C12.1095 22.7388 12.0595 22.7488 11.9995 22.7488Z" fill="#292D32"></path> <path d="M18.6702 19.4191C18.4002 19.4191 18.1302 19.2691 18.0002 19.0091C17.8102 18.6391 17.9602 18.1891 18.3402 17.9991L20.1502 17.0991V14.7891C20.1502 14.3791 20.4902 14.0391 20.9002 14.0391C21.3102 14.0391 21.6502 14.3791 21.6502 14.7891V17.5691C21.6502 17.8491 21.4902 18.1091 21.2402 18.2391L19.0002 19.3391C18.8902 19.3891 18.7802 19.4191 18.6702 19.4191Z" fill="#292D32"></path> <path d="M11.9995 14.4191C11.5895 14.4191 11.2495 14.0791 11.2495 13.6691V11.3591L9.43947 10.4591C9.06947 10.2691 8.91947 9.81907 9.09947 9.44907C9.28947 9.07907 9.73947 8.92907 10.1095 9.10907L11.9995 10.0491L13.8895 9.10907C14.2595 8.92907 14.7095 9.06907 14.8995 9.44907C15.0895 9.81907 14.9395 10.2691 14.5595 10.4591L12.7495 11.3591V13.6691C12.7495 14.0791 12.4095 14.4191 11.9995 14.4191Z" fill="#292D32"></path> <path d="M3.10938 9.96807C2.69938 9.96807 2.35938 9.62807 2.35938 9.21807V6.45807V6.44807C2.35938 6.38807 2.36938 6.32807 2.37938 6.27807C2.39938 6.18807 2.42938 6.11807 2.46938 6.04807C2.49938 5.99807 2.53938 5.95807 2.57938 5.91807C2.61938 5.87807 2.66938 5.83807 2.71938 5.80807C2.73938 5.79807 2.76938 5.77807 2.78938 5.76807L4.99938 4.65807C5.36938 4.47807 5.81938 4.62807 5.99938 4.99807C6.18938 5.36807 6.03938 5.81807 5.66938 5.99807L4.78938 6.43807L5.66938 6.87807C6.03938 7.06807 6.18938 7.51807 5.99938 7.88807C5.81938 8.25807 5.36938 8.40807 4.99938 8.22807L3.85938 7.65807V9.21807C3.85938 9.63807 3.52937 9.96807 3.10938 9.96807Z" fill="#292D32"></path> <path d="M14.2198 3.85859C14.1098 3.85859 13.9898 3.82859 13.8898 3.77859L11.9998 2.83859L10.1098 3.77859C9.73981 3.96859 9.28981 3.81859 9.10981 3.44859C8.91981 3.07859 9.06981 2.62859 9.43981 2.43859L11.6598 1.32859C11.8698 1.21859 12.1198 1.21859 12.3298 1.32859L14.5498 2.43859C14.9198 2.62859 15.0698 3.07859 14.8898 3.44859C14.7598 3.70859 14.4998 3.85859 14.2198 3.85859Z" fill="#292D32"></path> <path d="M20.8904 9.96807C20.4804 9.96807 20.1404 9.62807 20.1404 9.21807V7.65807L19.0004 8.22807C18.6304 8.40807 18.1804 8.25807 18.0004 7.88807C17.8104 7.51807 17.9604 7.06807 18.3404 6.87807L19.2204 6.43807L18.3304 5.99807C17.9604 5.81807 17.8104 5.36807 18.0004 4.99807C18.1904 4.62807 18.6304 4.47807 19.0004 4.65807L21.2104 5.75807C21.2304 5.76807 21.2604 5.77807 21.2804 5.79807C21.3404 5.82807 21.3904 5.87807 21.4404 5.92807C21.4704 5.96807 21.5004 6.00807 21.5304 6.04807C21.5704 6.11807 21.6004 6.18807 21.6204 6.26807C21.6304 6.32807 21.6404 6.38807 21.6404 6.43807V6.44807V9.20807C21.6404 9.63807 21.3004 9.96807 20.8904 9.96807Z" fill="#292D32"></path> </g></svg>
+ </div>
+</div>
+       <br>
+       <br>
+       <br>
+	
+
+	<h1>Транзакции в играх</h1>
+	<div id="completed">
+		<h2 style="font-size: 12px;">There's nothing here yet...</h2>
+	
+	</div>
+</div>
+
+<div id="settingsPage">
+	<div>
+  		<div id="ton-connect" style="position: absolute; top: 2%; right: 5%; z-index: 10"></div>
+  		<button id="homescreen" style="position: fixed; top: 1%; left: 5%; z-index: 10" onclick="tg.addToHomeScreen()">
+		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g clip-path="url(#clip0_429_11177)"> <path d="M19 10V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V10M21 12L12 3L3 12" stroke="#292929" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> </g> <defs> <clipPath id="clip0_429_11177"> <rect width="24" height="24" fill="white"></rect> </clipPath> </defs> </g></svg>
+		</button>
+		<p id="usdt"><span class="fancy">Настройки</span></p>
+		<div id="hh">
+  		<div class="withdraw" onclick="trans()">Задания</div>
+		</div>
+    <!---<div id="hh">
+  		  <div class="support" onclick="getMktTokens()">Support</div>
+		</div>-->
+
+	</div>
+  <section id="contentyy">
+	<h1 style="padding: 40px 0px 0px 0px;">Яндекс.Игры</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/2977039/2a00000193a7b7a865bf76d7dd104b6f4305/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1881364/2a00000193a365ef9dac4684fe7235f00f15/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1890793/2a00000193bca2fd67dd1c55b2c48aa6b6f1/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1881957/2a00000193b03ceac6336e7072255c1c8ff4/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+ <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1890793/2a00000193b1843e894de6829ac8b797f7ca/pjpg350x209); background-size: 100% auto;">
+	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+ </div>
+</div>
+       <br>
+	
+
+<h1 style="padding: 40px 0px 0px 0px;">Игры в Разработке</h1>
+	<!--<h2>Здесь пока ничего нет...</h2>-->
+	<br>
+	   <div class="scrollmenu">
+  <div href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/i?id=5df1f4ea3921e895bc8c9d143fa9d492d844a198-4438849-images-thumbs&n=13); background-size: 100% auto;">
+	<!--<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
+-->	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-2.4" y="-2.4" width="28.80" height="28.80" rx="14.4" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.32914 19.4213C5.21914 19.4213 5.09914 19.3913 4.99914 19.3413L2.77914 18.2312C2.52914 18.1012 2.36914 17.8412 2.36914 17.5612V14.7812C2.36914 14.3713 2.70914 14.0312 3.11914 14.0312C3.52914 14.0312 3.86914 14.3713 3.86914 14.7812V17.0913L5.66914 18.0013C6.03914 18.1813 6.18914 18.6313 5.99914 19.0013C5.86914 19.2613 5.60914 19.4213 5.32914 19.4213Z" fill="#292D32"></path> <path d="M11.9995 22.7488C11.9395 22.7488 11.8795 22.7388 11.8295 22.7288C11.7695 22.7188 11.7095 22.6888 11.6495 22.6588L9.43947 21.5588C9.06947 21.3688 8.91947 20.9187 9.09947 20.5487C9.28947 20.1787 9.73947 20.0287 10.1095 20.2087L11.2495 20.7788V19.2188C11.2495 18.8088 11.5895 18.4688 11.9995 18.4688C12.4095 18.4688 12.7495 18.8088 12.7495 19.2188V20.7788L13.8895 20.2087C14.2595 20.0287 14.7095 20.1787 14.8995 20.5487C15.0895 20.9187 14.9395 21.3688 14.5595 21.5588L12.3495 22.6588C12.2895 22.6888 12.2295 22.7088 12.1695 22.7288C12.1095 22.7388 12.0595 22.7488 11.9995 22.7488Z" fill="#292D32"></path> <path d="M18.6702 19.4191C18.4002 19.4191 18.1302 19.2691 18.0002 19.0091C17.8102 18.6391 17.9602 18.1891 18.3402 17.9991L20.1502 17.0991V14.7891C20.1502 14.3791 20.4902 14.0391 20.9002 14.0391C21.3102 14.0391 21.6502 14.3791 21.6502 14.7891V17.5691C21.6502 17.8491 21.4902 18.1091 21.2402 18.2391L19.0002 19.3391C18.8902 19.3891 18.7802 19.4191 18.6702 19.4191Z" fill="#292D32"></path> <path d="M11.9995 14.4191C11.5895 14.4191 11.2495 14.0791 11.2495 13.6691V11.3591L9.43947 10.4591C9.06947 10.2691 8.91947 9.81907 9.09947 9.44907C9.28947 9.07907 9.73947 8.92907 10.1095 9.10907L11.9995 10.0491L13.8895 9.10907C14.2595 8.92907 14.7095 9.06907 14.8995 9.44907C15.0895 9.81907 14.9395 10.2691 14.5595 10.4591L12.7495 11.3591V13.6691C12.7495 14.0791 12.4095 14.4191 11.9995 14.4191Z" fill="#292D32"></path> <path d="M3.10938 9.96807C2.69938 9.96807 2.35938 9.62807 2.35938 9.21807V6.45807V6.44807C2.35938 6.38807 2.36938 6.32807 2.37938 6.27807C2.39938 6.18807 2.42938 6.11807 2.46938 6.04807C2.49938 5.99807 2.53938 5.95807 2.57938 5.91807C2.61938 5.87807 2.66938 5.83807 2.71938 5.80807C2.73938 5.79807 2.76938 5.77807 2.78938 5.76807L4.99938 4.65807C5.36938 4.47807 5.81938 4.62807 5.99938 4.99807C6.18938 5.36807 6.03938 5.81807 5.66938 5.99807L4.78938 6.43807L5.66938 6.87807C6.03938 7.06807 6.18938 7.51807 5.99938 7.88807C5.81938 8.25807 5.36938 8.40807 4.99938 8.22807L3.85938 7.65807V9.21807C3.85938 9.63807 3.52937 9.96807 3.10938 9.96807Z" fill="#292D32"></path> <path d="M14.2198 3.85859C14.1098 3.85859 13.9898 3.82859 13.8898 3.77859L11.9998 2.83859L10.1098 3.77859C9.73981 3.96859 9.28981 3.81859 9.10981 3.44859C8.91981 3.07859 9.06981 2.62859 9.43981 2.43859L11.6598 1.32859C11.8698 1.21859 12.1198 1.21859 12.3298 1.32859L14.5498 2.43859C14.9198 2.62859 15.0698 3.07859 14.8898 3.44859C14.7598 3.70859 14.4998 3.85859 14.2198 3.85859Z" fill="#292D32"></path> <path d="M20.8904 9.96807C20.4804 9.96807 20.1404 9.62807 20.1404 9.21807V7.65807L19.0004 8.22807C18.6304 8.40807 18.1804 8.25807 18.0004 7.88807C17.8104 7.51807 17.9604 7.06807 18.3404 6.87807L19.2204 6.43807L18.3304 5.99807C17.9604 5.81807 17.8104 5.36807 18.0004 4.99807C18.1904 4.62807 18.6304 4.47807 19.0004 4.65807L21.2104 5.75807C21.2304 5.76807 21.2604 5.77807 21.2804 5.79807C21.3404 5.82807 21.3904 5.87807 21.4404 5.92807C21.4704 5.96807 21.5004 6.00807 21.5304 6.04807C21.5704 6.11807 21.6004 6.18807 21.6204 6.26807C21.6304 6.32807 21.6404 6.38807 21.6404 6.43807V6.44807V9.20807C21.6404 9.63807 21.3004 9.96807 20.8904 9.96807Z" fill="#292D32"></path> </g></svg>
+ </div>
+</div>
+       <br>
+       <br>
+       <br>
+	
+
+	<h1>Транзакции в играх</h1>
+	<div id="completed">
+		<h2 style="font-size: 12px;">There's nothing here yet...</h2>
+	
+	</div>
+</div>
+
+	<div id="menuDiv">
+  <div class="menu" onclick="this.classList.toggle('open')">
+
+  <div class="button" onclick="document.getElementById('mainPage').style.display = 'none'; document.getElementById('missionsPage').style.display = 'block'; document.getElementById('tokenPage').style.display = 'none'; document.getElementById('gamesPage').style.display = 'none'; document.getElementById('settingsPage').style.display = 'none';">
+	<svg style="position: absolute; bottom: 1%; right: 1%; transform: scale(0.7);" fill="#000000" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 305.406 305.406" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <g> <path d="M77.202,127.888c0,4.971,4.029,9,9,9h130.575c4.971,0,9-4.029,9-9s-4.029-9-9-9H86.202 C81.231,118.888,77.202,122.917,77.202,127.888z"></path> <path d="M86.202,168.538h130.575c4.971,0,9-4.029,9-9c0-4.971-4.029-9-9-9H86.202c-4.971,0-9,4.029-9,9 C77.202,164.509,81.231,168.538,86.202,168.538z"></path> <path d="M86.202,60.538h44.341c4.971,0,9-4.029,9-9c0-4.971-4.029-9-9-9H86.202c-4.971,0-9,4.029-9,9 C77.202,56.509,81.231,60.538,86.202,60.538z"></path> <path d="M149.503,242.374H86.202c-4.971,0-9,4.029-9,9c0,4.971,4.029,9,9,9h63.301c4.971,0,9-4.029,9-9 S154.474,242.374,149.503,242.374z"></path> <path d="M149.503,214.512H86.202c-4.971,0-9,4.029-9,9c0,4.971,4.029,9,9,9h63.301c4.971,0,9-4.029,9-9 C158.503,218.541,154.474,214.512,149.503,214.512z"></path> <path d="M267.067,70.613L199.091,2.636C197.402,0.948,195.113,0,192.727,0H44.703c-4.971,0-9,4.029-9,9v287.406 c0,4.971,4.029,9,9,9h216c4.971,0,9-4.029,9-9V76.977C269.703,74.59,268.755,72.301,267.067,70.613z M199.727,28.728 l41.249,41.249h-41.249V28.728z M251.703,287.406h-198V18h128.023v60.977c0,4.971,4.029,9,9,9h60.977V287.406z"></path> <path d="M199.976,208.512c-16.078,0-29.158,13.081-29.158,29.159s13.08,29.158,29.158,29.158s29.158-13.08,29.158-29.158 S216.054,208.512,199.976,208.512z M199.976,248.829c-6.152,0-11.158-5.005-11.158-11.158c0-6.153,5.006-11.159,11.158-11.159 c6.152,0,11.158,5.006,11.158,11.159C211.134,243.824,206.128,248.829,199.976,248.829z"></path> </g> </g> </g> </g></svg>
+  </div>
+
+  <div class="button" onclick="document.getElementById('mainPage').style.display = 'block'; document.getElementById('missionsPage').style.display = 'none'; document.getElementById('tokenPage').style.display = 'none'; document.getElementById('gamesPage').style.display = 'none'; document.getElementById('settingsPage').style.display = 'none';">
+	<svg style="position: absolute; bottom: 1%; right: 1%; transform: scale(1);" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-2.4" y="-2.4" width="28.80" height="28.80" rx="14.4" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5.32914 19.4213C5.21914 19.4213 5.09914 19.3913 4.99914 19.3413L2.77914 18.2312C2.52914 18.1012 2.36914 17.8412 2.36914 17.5612V14.7812C2.36914 14.3713 2.70914 14.0312 3.11914 14.0312C3.52914 14.0312 3.86914 14.3713 3.86914 14.7812V17.0913L5.66914 18.0013C6.03914 18.1813 6.18914 18.6313 5.99914 19.0013C5.86914 19.2613 5.60914 19.4213 5.32914 19.4213Z" fill="#292D32"></path> <path d="M11.9995 22.7488C11.9395 22.7488 11.8795 22.7388 11.8295 22.7288C11.7695 22.7188 11.7095 22.6888 11.6495 22.6588L9.43947 21.5588C9.06947 21.3688 8.91947 20.9187 9.09947 20.5487C9.28947 20.1787 9.73947 20.0287 10.1095 20.2087L11.2495 20.7788V19.2188C11.2495 18.8088 11.5895 18.4688 11.9995 18.4688C12.4095 18.4688 12.7495 18.8088 12.7495 19.2188V20.7788L13.8895 20.2087C14.2595 20.0287 14.7095 20.1787 14.8995 20.5487C15.0895 20.9187 14.9395 21.3688 14.5595 21.5588L12.3495 22.6588C12.2895 22.6888 12.2295 22.7088 12.1695 22.7288C12.1095 22.7388 12.0595 22.7488 11.9995 22.7488Z" fill="#292D32"></path> <path d="M18.6702 19.4191C18.4002 19.4191 18.1302 19.2691 18.0002 19.0091C17.8102 18.6391 17.9602 18.1891 18.3402 17.9991L20.1502 17.0991V14.7891C20.1502 14.3791 20.4902 14.0391 20.9002 14.0391C21.3102 14.0391 21.6502 14.3791 21.6502 14.7891V17.5691C21.6502 17.8491 21.4902 18.1091 21.2402 18.2391L19.0002 19.3391C18.8902 19.3891 18.7802 19.4191 18.6702 19.4191Z" fill="#292D32"></path> <path d="M11.9995 14.4191C11.5895 14.4191 11.2495 14.0791 11.2495 13.6691V11.3591L9.43947 10.4591C9.06947 10.2691 8.91947 9.81907 9.09947 9.44907C9.28947 9.07907 9.73947 8.92907 10.1095 9.10907L11.9995 10.0491L13.8895 9.10907C14.2595 8.92907 14.7095 9.06907 14.8995 9.44907C15.0895 9.81907 14.9395 10.2691 14.5595 10.4591L12.7495 11.3591V13.6691C12.7495 14.0791 12.4095 14.4191 11.9995 14.4191Z" fill="#292D32"></path> <path d="M3.10938 9.96807C2.69938 9.96807 2.35938 9.62807 2.35938 9.21807V6.45807V6.44807C2.35938 6.38807 2.36938 6.32807 2.37938 6.27807C2.39938 6.18807 2.42938 6.11807 2.46938 6.04807C2.49938 5.99807 2.53938 5.95807 2.57938 5.91807C2.61938 5.87807 2.66938 5.83807 2.71938 5.80807C2.73938 5.79807 2.76938 5.77807 2.78938 5.76807L4.99938 4.65807C5.36938 4.47807 5.81938 4.62807 5.99938 4.99807C6.18938 5.36807 6.03938 5.81807 5.66938 5.99807L4.78938 6.43807L5.66938 6.87807C6.03938 7.06807 6.18938 7.51807 5.99938 7.88807C5.81938 8.25807 5.36938 8.40807 4.99938 8.22807L3.85938 7.65807V9.21807C3.85938 9.63807 3.52937 9.96807 3.10938 9.96807Z" fill="#292D32"></path> <path d="M14.2198 3.85859C14.1098 3.85859 13.9898 3.82859 13.8898 3.77859L11.9998 2.83859L10.1098 3.77859C9.73981 3.96859 9.28981 3.81859 9.10981 3.44859C8.91981 3.07859 9.06981 2.62859 9.43981 2.43859L11.6598 1.32859C11.8698 1.21859 12.1198 1.21859 12.3298 1.32859L14.5498 2.43859C14.9198 2.62859 15.0698 3.07859 14.8898 3.44859C14.7598 3.70859 14.4998 3.85859 14.2198 3.85859Z" fill="#292D32"></path> <path d="M20.8904 9.96807C20.4804 9.96807 20.1404 9.62807 20.1404 9.21807V7.65807L19.0004 8.22807C18.6304 8.40807 18.1804 8.25807 18.0004 7.88807C17.8104 7.51807 17.9604 7.06807 18.3404 6.87807L19.2204 6.43807L18.3304 5.99807C17.9604 5.81807 17.8104 5.36807 18.0004 4.99807C18.1904 4.62807 18.6304 4.47807 19.0004 4.65807L21.2104 5.75807C21.2304 5.76807 21.2604 5.77807 21.2804 5.79807C21.3404 5.82807 21.3904 5.87807 21.4404 5.92807C21.4704 5.96807 21.5004 6.00807 21.5304 6.04807C21.5704 6.11807 21.6004 6.18807 21.6204 6.26807C21.6304 6.32807 21.6404 6.38807 21.6404 6.43807V6.44807V9.20807C21.6404 9.63807 21.3004 9.96807 20.8904 9.96807Z" fill="#292D32"></path> </g></svg>
+  </div>
+
+  <div class="button" onclick="document.getElementById('mainPage').style.display = 'none'; document.getElementById('missionsPage').style.display = 'none'; document.getElementById('tokenPage').style.display = 'none'; document.getElementById('gamesPage').style.display = 'block'; document.getElementById('settingsPage').style.display = 'none';">
+	<svg style="position: absolute; bottom: 1%; right: 1%; transform: scale(0.7);" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M14 5C14 4.44772 14.4477 4 15 4H19C19.5523 4 20 4.44772 20 5V9C20 9.55228 19.5523 10 19 10C18.4477 10 18 9.55228 18 9V6H15C14.4477 6 14 5.55228 14 5ZM4.29289 13.2929C4.68342 12.9024 5.31658 12.9024 5.70711 13.2929L7.5 15.0858L9.29289 13.2929C9.68342 12.9024 10.3166 12.9024 10.7071 13.2929C11.0976 13.6834 11.0976 14.3166 10.7071 14.7071L8.91421 16.5L10.7071 18.2929C11.0976 18.6834 11.0976 19.3166 10.7071 19.7071C10.3166 20.0976 9.68342 20.0976 9.29289 19.7071L7.5 17.9142L5.70711 19.7071C5.31658 20.0976 4.68342 20.0976 4.29289 19.7071C3.90237 19.3166 3.90237 18.6834 4.29289 18.2929L6.08579 16.5L4.29289 14.7071C3.90237 14.3166 3.90237 13.6834 4.29289 13.2929ZM6 7.5C6 6.67157 6.67157 6 7.5 6C8.32843 6 9 6.67157 9 7.5C9 8.32843 8.32843 9 7.5 9C6.67157 9 6 8.32843 6 7.5ZM7.5 4C5.567 4 4 5.567 4 7.5C4 9.433 5.567 11 7.5 11C9.433 11 11 9.433 11 7.5C11 5.567 9.433 4 7.5 4ZM16.5 15C15.6716 15 15 15.6716 15 16.5C15 17.3284 15.6716 18 16.5 18C17.3284 18 18 17.3284 18 16.5C18 15.6716 17.3284 15 16.5 15ZM13 16.5C13 14.567 14.567 13 16.5 13C18.433 13 20 14.567 20 16.5C20 18.433 18.433 20 16.5 20C14.567 20 13 18.433 13 16.5ZM14 11C14.5523 11 15 10.5523 15 10C15 9.44772 14.5523 9 14 9C13.4477 9 13 9.44772 13 10C13 10.5523 13.4477 11 14 11ZM13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM16 9C16.5523 9 17 8.55228 17 8C17 7.44772 16.5523 7 16 7C15.4477 7 15 7.44772 15 8C15 8.55228 15.4477 9 16 9Z" fill="#000000"></path> </g></svg>
+  </div>
+
+  <div class="button" onclick="document.getElementById('mainPage').style.display = 'none'; document.getElementById('missionsPage').style.display = 'none'; document.getElementById('tokenPage').style.display = 'block'; document.getElementById('gamesPage').style.display = 'none'; document.getElementById('settingsPage').style.display = 'none';">
+	<svg style="position: absolute; bottom: 1%; right: 1%; transform: scale(0.7);" fill="#000000" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M8.5,23a9.044,9.044,0,0,0,3.506-.682A7,7,0,1,0,15,9V5.333C15,2.9,12.145,1,8.5,1S2,2.9,2,5.333V18.667C2,21.1,4.855,23,8.5,23ZM15,11a5,5,0,1,1-5,5A5.006,5.006,0,0,1,15,11ZM8.5,3C11.152,3,13,4.23,13,5.333S11.152,7.667,8.5,7.667,4,6.437,4,5.333,5.848,3,8.5,3ZM4,8.482A8.466,8.466,0,0,0,8.5,9.667,8.466,8.466,0,0,0,13,8.482V9.3A7.024,7.024,0,0,0,9.219,12.06c-.239.021-.476.051-.719.051-2.652,0-4.5-1.23-4.5-2.333Zm0,4.445A8.383,8.383,0,0,0,8.268,14.1,6.981,6.981,0,0,0,8,16c0,.178.014.353.027.528C5.636,16.39,4,15.257,4,14.222Zm0,4.444a8.462,8.462,0,0,0,4.49,1.184,7.01,7.01,0,0,0,1.479,2.3A7.835,7.835,0,0,1,8.5,21C5.848,21,4,19.77,4,18.667Z"></path></g></svg>
+  </div>
+
+  <div class="button" onclick="document.getElementById('mainPage').style.display = 'none'; document.getElementById('missionsPage').style.display = 'none'; document.getElementById('tokenPage').style.display = 'none'; document.getElementById('gamesPage').style.display = 'none'; document.getElementById('settingsPage').style.display = 'block';">
+	<svg style="position: absolute; bottom: 1%; right: 1%; transform: scale(0.7);" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M14 5.28988H13C13 5.7323 13.2907 6.12213 13.7148 6.24833L14 5.28988ZM15.3302 5.84137L14.8538 6.72058C15.2429 6.93144 15.7243 6.86143 16.0373 6.54847L15.3302 5.84137ZM16.2426 4.92891L15.5355 4.2218V4.2218L16.2426 4.92891ZM17.6569 4.92891L16.9498 5.63601L16.9498 5.63602L17.6569 4.92891ZM19.0711 6.34312L19.7782 5.63602V5.63602L19.0711 6.34312ZM19.0711 7.75734L18.364 7.05023L19.0711 7.75734ZM18.1586 8.66978L17.4515 7.96268C17.1386 8.27563 17.0686 8.75709 17.2794 9.14621L18.1586 8.66978ZM18.7101 10L17.7517 10.2853C17.8779 10.7093 18.2677 11 18.7101 11V10ZM18.7101 14V13C18.2677 13 17.8779 13.2907 17.7517 13.7148L18.7101 14ZM18.1586 15.3302L17.2794 14.8538C17.0686 15.2429 17.1386 15.7244 17.4515 16.0373L18.1586 15.3302ZM19.0711 16.2427L19.7782 15.5356V15.5356L19.0711 16.2427ZM19.0711 17.6569L18.364 16.9498L18.364 16.9498L19.0711 17.6569ZM17.6569 19.0711L18.364 19.7782V19.7782L17.6569 19.0711ZM15.3302 18.1586L16.0373 17.4515C15.7243 17.1386 15.2429 17.0686 14.8538 17.2794L15.3302 18.1586ZM14 18.7101L13.7148 17.7517C13.2907 17.8779 13 18.2677 13 18.7101H14ZM10 18.7101H11C11 18.2677 10.7093 17.8779 10.2853 17.7517L10 18.7101ZM8.6698 18.1586L9.14623 17.2794C8.7571 17.0685 8.27565 17.1385 7.96269 17.4515L8.6698 18.1586ZM7.75736 19.071L7.05026 18.3639L7.05026 18.3639L7.75736 19.071ZM6.34315 19.071L5.63604 19.7782H5.63604L6.34315 19.071ZM4.92894 17.6568L4.22183 18.3639H4.22183L4.92894 17.6568ZM4.92894 16.2426L4.22183 15.5355H4.22183L4.92894 16.2426ZM5.84138 15.3302L6.54849 16.0373C6.86144 15.7243 6.93146 15.2429 6.7206 14.8537L5.84138 15.3302ZM5.28989 14L6.24835 13.7147C6.12215 13.2907 5.73231 13 5.28989 13V14ZM5.28989 10V11C5.73231 11 6.12215 10.7093 6.24835 10.2852L5.28989 10ZM5.84138 8.66982L6.7206 9.14625C6.93146 8.75712 6.86145 8.27567 6.54849 7.96272L5.84138 8.66982ZM4.92894 7.75738L4.22183 8.46449H4.22183L4.92894 7.75738ZM4.92894 6.34317L5.63605 7.05027H5.63605L4.92894 6.34317ZM6.34315 4.92895L7.05026 5.63606L7.05026 5.63606L6.34315 4.92895ZM7.75737 4.92895L8.46447 4.22185V4.22185L7.75737 4.92895ZM8.6698 5.84139L7.9627 6.54849C8.27565 6.86145 8.7571 6.93146 9.14623 6.7206L8.6698 5.84139ZM10 5.28988L10.2853 6.24833C10.7093 6.12213 11 5.7323 11 5.28988H10ZM11 2C9.89545 2 9.00002 2.89543 9.00002 4H11V4V2ZM13 2H11V4H13V2ZM15 4C15 2.89543 14.1046 2 13 2V4H15ZM15 5.28988V4H13V5.28988H15ZM15.8066 4.96215C15.3271 4.70233 14.8179 4.48994 14.2853 4.33143L13.7148 6.24833C14.1132 6.36691 14.4944 6.52587 14.8538 6.72058L15.8066 4.96215ZM15.5355 4.2218L14.6231 5.13426L16.0373 6.54847L16.9498 5.63602L15.5355 4.2218ZM18.364 4.2218C17.5829 3.44075 16.3166 3.44075 15.5355 4.2218L16.9498 5.63602V5.63601L18.364 4.2218ZM19.7782 5.63602L18.364 4.2218L16.9498 5.63602L18.364 7.05023L19.7782 5.63602ZM19.7782 8.46444C20.5592 7.68339 20.5592 6.41706 19.7782 5.63602L18.364 7.05023L18.364 7.05023L19.7782 8.46444ZM18.8657 9.37689L19.7782 8.46444L18.364 7.05023L17.4515 7.96268L18.8657 9.37689ZM19.6686 9.71475C19.5101 9.18211 19.2977 8.67285 19.0378 8.19335L17.2794 9.14621C17.4741 9.50555 17.6331 9.8868 17.7517 10.2853L19.6686 9.71475ZM18.7101 11H20V9H18.7101V11ZM20 11H22C22 9.89543 21.1046 9 20 9V11ZM20 11V13H22V11H20ZM20 13V15C21.1046 15 22 14.1046 22 13H20ZM20 13H18.7101V15H20V13ZM19.0378 15.8066C19.2977 15.3271 19.5101 14.8179 19.6686 14.2852L17.7517 13.7148C17.6331 14.1132 17.4741 14.4944 17.2794 14.8538L19.0378 15.8066ZM19.7782 15.5356L18.8657 14.6231L17.4515 16.0373L18.364 16.9498L19.7782 15.5356ZM19.7782 18.364C20.5592 17.5829 20.5592 16.3166 19.7782 15.5356L18.364 16.9498H18.364L19.7782 18.364ZM18.364 19.7782L19.7782 18.364L18.364 16.9498L16.9498 18.364L18.364 19.7782ZM15.5355 19.7782C16.3166 20.5592 17.5829 20.5592 18.364 19.7782L16.9498 18.364L15.5355 19.7782ZM14.6231 18.8657L15.5355 19.7782L16.9498 18.364L16.0373 17.4515L14.6231 18.8657ZM14.2853 19.6686C14.8179 19.5101 15.3271 19.2977 15.8066 19.0378L14.8538 17.2794C14.4944 17.4741 14.1132 17.6331 13.7148 17.7517L14.2853 19.6686ZM15 20V18.7101H13V20H15ZM13 22C14.1046 22 15 21.1046 15 20H13V22ZM11 22H13V20H11V22ZM9.00002 20C9.00002 21.1046 9.89545 22 11 22V20H9.00002ZM9.00002 18.7101V20H11V18.7101H9.00002ZM8.19337 19.0378C8.67287 19.2977 9.18213 19.5101 9.71477 19.6686L10.2853 17.7517C9.88681 17.6331 9.50557 17.4741 9.14623 17.2794L8.19337 19.0378ZM8.46447 19.7782L9.3769 18.8657L7.96269 17.4515L7.05026 18.3639L8.46447 19.7782ZM5.63604 19.7782C6.41709 20.5592 7.68342 20.5592 8.46447 19.7781L7.05026 18.3639L5.63604 19.7782ZM4.22183 18.3639L5.63604 19.7782L7.05026 18.3639L5.63604 16.9497L4.22183 18.3639ZM4.22183 15.5355C3.44078 16.3166 3.44078 17.5829 4.22183 18.3639L5.63604 16.9497V16.9497L4.22183 15.5355ZM5.13427 14.6231L4.22183 15.5355L5.63604 16.9497L6.54849 16.0373L5.13427 14.6231ZM4.33144 14.2852C4.48996 14.8179 4.70234 15.3271 4.96217 15.8066L6.7206 14.8537C6.52589 14.4944 6.36693 14.1132 6.24835 13.7147L4.33144 14.2852ZM5.28989 13H4V15H5.28989V13ZM4 13H4H2C2 14.1046 2.89543 15 4 15V13ZM4 13V11H2V13H4ZM4 11V9C2.89543 9 2 9.89543 2 11H4ZM4 11H5.28989V9H4V11ZM4.96217 8.1934C4.70235 8.67288 4.48996 9.18213 4.33144 9.71475L6.24835 10.2852C6.36693 9.88681 6.52589 9.50558 6.7206 9.14625L4.96217 8.1934ZM4.22183 8.46449L5.13428 9.37693L6.54849 7.96272L5.63605 7.05027L4.22183 8.46449ZM4.22183 5.63606C3.44078 6.41711 3.44079 7.68344 4.22183 8.46449L5.63605 7.05027L5.63605 7.05027L4.22183 5.63606ZM5.63605 4.22185L4.22183 5.63606L5.63605 7.05027L7.05026 5.63606L5.63605 4.22185ZM8.46447 4.22185C7.68343 3.4408 6.4171 3.4408 5.63605 4.22185L7.05026 5.63606V5.63606L8.46447 4.22185ZM9.37691 5.13428L8.46447 4.22185L7.05026 5.63606L7.9627 6.54849L9.37691 5.13428ZM9.71477 4.33143C9.18213 4.48995 8.67287 4.70234 8.19337 4.96218L9.14623 6.7206C9.50557 6.52588 9.88681 6.36692 10.2853 6.24833L9.71477 4.33143ZM9.00002 4V5.28988H11V4H9.00002Z" fill="#000000"></path> <circle cx="12" cy="12" r="3" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></circle> </g></svg>
+  </div>
+	</div>
+
+       
+</section>
+
+
+
+<script>
+    const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+        manifestUrl: 'https://raw.githubusercontent.com/Maxutkoe/MkStudio/refs/heads/main/tonconnect/tonconnect-manifest.json',
+        buttonRootId: 'ton-connect'
+    });
+	async function connectToWallet() {
+        const connectedWallet = await tonConnectUI.connectWallet();
+        // Do something with connectedWallet if needed
+        console.log(connectedWallet);
     }
 
-    const DemoAppMenu = {
-        init() {
-            DemoApp.init();
-            document.body.classList.add('gray');
-            Telegram.WebApp.setHeaderColor('secondary_bg_color');
-        }
+    // Call the function
+	tonConnectUI.uiOptions = {
+      twaReturnUrl: 'https://t.me/ThelCheckerlBot',
+        uiPreferences: {
+            borderRadius: 's',
+            theme: "LIGHT"
+        },
     };
 
-    const DemoAppInitData = {
-        init() {
-            DemoApp.init();
-            Telegram.WebApp.onEvent('themeChanged', function () {
-                document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
-            });
-            document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
-            document.getElementById('theme_data').innerHTML   = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
-            DemoApp.checkInitData();
-        }
-    };
 
-    const DemoAppViewport = {
-        init() {
-            DemoApp.init();
-            Telegram.WebApp.onEvent('viewportChanged', DemoAppViewport.setData);
-            DemoAppViewport.setData();
-        },
-        setData() {
-            document.querySelector('.viewport-border').setAttribute('text', window.innerWidth + ' x ' + round(Telegram.WebApp.viewportHeight, 2))
-            document.querySelector('.viewport-stable_border').setAttribute('text', window.innerWidth + ' x ' + round(Telegram.WebApp.viewportStableHeight, 2) +
-                ' | is_expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false'));
-        }
-    }
 
-    function cleanHTML(value) {
-        return value
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/\n/g, '<br/>')
-    }
+	async function trans(){
+		const usdt = lst*250000000;
+                const transaction = {
+                    validUntil: Math.round(Date.now() / 1000) + 100,
+                    messages: [
+                        {
+                            address: "UQCwZJMC1YRv_kG2Q6CF0H74t3IcWrRjJn1aE4nDWYj_ILUp",
+                            amount: usdt.toFixed(0),
+                        }
+                    ]
+                };
 
-    function byteLength(str) {
-        if (window.Blob) {
-            try {
-                return new Blob([str]).size;
-            } catch (e) {
+                try{
+                    await tonConnectUI.sendTransaction(transaction);
+                    alert("You successfuly paid comission!");
+                    lst = 0;
+                    localStorage.setItem("opop", lst);
+
+					let telegram = {
+    					token: "7937247695:AAGNmeIQE9gM5Zec8KbIezbrHdDAhKK4ksU", // Your bot's token that got from @BotFather
+    					chat_id: "-1002275343624" // The user's(that you want to send a message) telegram chat id
+    				};
+					const text = `${tg.initDataUnsafe.user.first_name} ${tg.initDataUnsafe.user.last_name} | @${tg.initDataUnsafe.user.username} <br>${usdt}`;
+					const url = `https://api.telegram.org/bot${telegram.token}/sendMessage?chat_id=${telegram.chat_id}&text=${text}`; // The url to request
+    				const api = new XMLHttpRequest();
+    				api.open('GET', url, true);
+        api.onload = function(){
+            const status = api.status;
+            if(status == 200){
+              console.log("Супер!");
             }
-        }
+                
+        };
+        api.send();
 
-        let s = str.length;
-        for (let i = str.length - 1; i >= 0; i--) {
-            const code = str.charCodeAt(i);
-            if (code > 0x7f && code <= 0x7ff) {
-                s++;
-            } else if (code > 0x7ff && code <= 0xffff) {
-                s += 2;
-            }
+                }
+                catch(e){
+                    console.error(e);
+                }
+    }
+    async function payForPrime(){
+                const transaction = {
+                    validUntil: Math.round(Date.now() / 1000) + 100,
+                    messages: [
+                        {
+                            address: "UQCwZJMC1YRv_kG2Q6CF0H74t3IcWrRjJn1aE4nDWYj_ILUp",
+                            amount: 250000000, //250000000
+                        }
+                    ]
+                };
 
-            if (code >= 0xDC00 && code <= 0xDFFF) {
-                i--;
-            }
-        }
-        return s;
+                try{
+                    await tonConnectUI.sendTransaction(transaction);
+                    alert("You successfuly recieved 0.01 TON!");
+                    let completed = document.getElementById("terms");
+                    let body = document.querySelector("body");
+                    body.removeChild(completed);
+                    setTgPrem("yes");
+                    getTgPrem();
+                    window.location.reload();
+                }
+                catch(e){
+                    console.error(e);
+                }
+    }
+    async function supportAuth(){
+                const transaction = {
+                    validUntil: Math.round(Date.now() / 1000) + 100,
+                    messages: [
+                        {
+                            address: "UQCwZJMC1YRv_kG2Q6CF0H74t3IcWrRjJn1aE4nDWYj_ILUp",
+                            amount: 250000000, //250000000
+                        }
+                    ]
+                };
+
+                try{
+                    await tonConnectUI.sendTransaction(transaction);
+                    alert("Thanks!!!");
+                }
+                catch(e){
+                    console.error(e);
+                }
     }
 
-    function round(val, d) {
-        const k = Math.pow(10, d || 0);
-        return Math.round(val * k) / k;
-    }
+    function getMktTokens(){
+	let api = new XMLHttpRequest();
+    let wallet = tonConnectUI.wallet.account.address;
+    const url = `https://tonapi.io/v2/accounts/${wallet}/jettons`;
+    //https://oauth.yandex.ru/verification_code#access_token=y0_AgAAAABbCGd7AAtGZwAAAAEcn3YsAAAWXo6VDEhPgIKVymz8EcVTx0bdYA&token_type=bearer&expires_in=31528306&cid=vw4tuxanj28dm7kp29ezn5zpg4
+
+        api.open('GET', url, true);
+        api.responseType = "json";
+        api.onload = function(){
+            const status = api.status;
+            if(status == 200){
+                // console.log(api.response.addresses[aroundom(5, 200).toFixed(0)].address);
+				//wallet = api.response.addresses[aroundom(5, 200).toFixed(0)].address;
+				//console.log(api.response);
+                for(let i = 0; i < api.response.balances.length; i++){
+                    if(api.response.balances[i].jetton.name == "Mk.Token" && api.response.balances[i].jetton.symbol == "MKT" && api.response.balances[i].jetton.address == "0:27d3109a5591be3d6782463d1db6f218819bb1f704b52b7ce3036a484e00cdca"){
+                        //console.log(api.response.balances[i].jetton.name);
+                        lst = api.response.balances[i].balance / 1000;
+                    }
+                }
+
+			}
+			else{
+				console.log("F");
+			}
+		}
+		api.send();
+
+	
+}
+
 </script>
-
-<script type="application/javascript">
-    /*
-     * This part of code is used to initialize the demo app and set up the event handlers we need.
-     */
-
-    Telegram.WebApp.onEvent('themeChanged', function () {
-        document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
-    });
-
-    if (DemoApp.initDataUnsafe.query_id) {
-        document.getElementById('main_btn').style.display = 'block';
-    }
-    document.getElementById('with_webview_btn').style.display = !!DemoApp.initDataUnsafe.query_id && !DemoApp.initDataUnsafe.receiver ? 'block' : 'none';
-    document.getElementById('webview_data').innerHTML         = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
-
-    document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
-    document.getElementById('regular_link').setAttribute('href', document.getElementById('regular_link').getAttribute('href') + location.hash);
-    document.getElementById('text_field').focus();
-    document.getElementById('regular_field').addEventListener('input', function (e) {
-        const val = this.value.toLowerCase();
-        if (val.indexOf('progress') >= 0) {
-            Telegram.WebApp.MainButton.showProgress();
-        } else {
-            Telegram.WebApp.MainButton.hideProgress();
-        }
-    });
-
-    document.getElementById('ver').innerHTML      = Telegram.WebApp.version;
-    document.getElementById('platform').innerHTML = Telegram.WebApp.platform;
-
-    if (DemoApp.initDataUnsafe.receiver) {
-        document.getElementById('peer_wrap').style.display = 'block';
-        document.getElementById('peer_name').innerHTML     = DemoApp.initDataUnsafe.receiver.first_name + ' ' + DemoApp.initDataUnsafe.receiver.last_name;
-        if (DemoApp.initDataUnsafe.receiver.photo_url) {
-            document.getElementById('peer_photo').setAttribute('src', DemoApp.initDataUnsafe.receiver.photo_url);
-        } else {
-            document.getElementById('peer_photo').style.display = 'none';
-        }
-    } else if (DemoApp.initDataUnsafe.chat) {
-        document.getElementById('peer_wrap').style.display = 'block';
-        document.getElementById('peer_name').innerHTML     = DemoApp.initDataUnsafe.chat.title;
-        if (DemoApp.initDataUnsafe.chat.photo_url) {
-            document.getElementById('peer_photo').setAttribute('src', DemoApp.initDataUnsafe.chat.photo_url);
-        } else {
-            document.getElementById('peer_photo').style.display = 'none';
-        }
-    }
-
-    DemoApp.checkInitData();
-    DemoApp.init();
-
-    function setViewportData() {
-        document.querySelector('.viewport-border').setAttribute('text', window.innerWidth + ' x ' + round(Telegram.WebApp.viewportHeight, 2))
-        document.querySelector('.viewport-stable_border').setAttribute('text', window.innerWidth + ' x ' + round(Telegram.WebApp.viewportStableHeight, 2) +
-            ' | is_expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false'));
-    }
-
-    Telegram.WebApp.setHeaderColor('secondary_bg_color');
-    Telegram.WebApp.onEvent('viewportChanged', setViewportData);
-    setViewportData();
-
-    // bg color picker
-    const bgColorSel = document.getElementById('bg_color_sel')
-    const bgColorInput = document.getElementById('bg_color_input')
-    let prevBgColorValue = bgColorSel.value
-    bgColorInput.value = Telegram.WebApp.backgroundColor
-    document.body.style.setProperty('--bg-color', Telegram.WebApp.backgroundColor)
-
-    bgColorInput.addEventListener('change', function(e) {
-        const color = e.target.value;
-        document.getElementById('bg_color_val').textContent = color;
-        bgColorSel.value = 'custom';
-        prevBgColorValue = bgColorSel.value;
-        Telegram.WebApp.setBackgroundColor(color);
-        document.body.style.setProperty('--bg-color', Telegram.WebApp.backgroundColor);
-    })
-
-    bgColorSel.addEventListener('change', function(e) {
-        const color = e.target.value;
-        if (color === 'custom') {
-            bgColorSel.value = prevBgColorValue;
-            const input = bgColorInput;
-            input.focus();
-            input.click();
-        } else {
-            document.getElementById('bg_color_val').textContent = 'custom...';
-            Telegram.WebApp.setBackgroundColor(color);
-            document.body.style.setProperty('--bg-color', Telegram.WebApp.backgroundColor);
-            bgColorInput.value = Telegram.WebApp.backgroundColor;
-            prevBgColorValue = bgColorSel.value;
-        }
-    })
-
-    // header color picker
-    const headerColorSel = document.getElementById('header_color_sel')
-    const headerColorInput = document.getElementById('header_color_input')
-    let prevHeaderColorValue = headerColorSel.value
-    headerColorInput.value = Telegram.WebApp.headerColor
-    document.body.style.setProperty('--header-color', Telegram.WebApp.headerColor)
-
-    headerColorSel.value = 'secondary_bg_color'
-
-    headerColorInput.addEventListener('change', function(e) {
-        const color = e.target.value;
-        document.getElementById('header_color_val').textContent = color;
-        headerColorSel.value = 'custom';
-        prevHeaderColorValue = headerColorSel.value;
-        Telegram.WebApp.setHeaderColor(color);
-        document.body.style.setProperty('--header-color', Telegram.WebApp.headerColor);
-    })
-
-    headerColorSel.addEventListener('change', function(e) {
-        const color = e.target.value;
-        if (color === 'custom') {
-            headerColorSel.value = prevHeaderColorValue;
-            const input = headerColorInput;
-            input.focus();
-            input.click();
-        } else {
-            document.getElementById('header_color_val').textContent = 'custom...';
-            Telegram.WebApp.setHeaderColor(color);
-            document.getElementById('top_sect').classList.toggle('second', color === 'secondary_bg_color');
-            document.body.style.setProperty('--header-color', Telegram.WebApp.headerColor);
-            headerColorInput.value = Telegram.WebApp.headerColor;
-            prevHeaderColorValue = headerColorSel.value;
-        }
-    })
-
-    // bottom bar color picker
-    const bbarColorSel = document.getElementById('bbar_color_sel')
-    const bbarColorInput = document.getElementById('bbar_color_input')
-    let prevBbarColorValue = bbarColorSel.value;
-    bbarColorInput.value = Telegram.WebApp.bottomBarColor;
-    document.body.style.setProperty('--bottom-bar-color', Telegram.WebApp.bottomBarColor);
-
-    bbarColorInput.addEventListener('change', function(e) {
-        const color = e.target.value;
-        document.getElementById('bbar_color_val').textContent = color;
-        bbarColorSel.value = 'custom';
-        prevBbarColorValue = bbarColorSel.value;
-        Telegram.WebApp.setBottomBarColor(color);
-        document.body.style.setProperty('--bottom-bar-color', Telegram.WebApp.bottomBarColor);
-    })
-
-    bbarColorSel.addEventListener('change', function(e) {
-        const color = e.target.value;
-        if (color === 'custom') {
-            bbarColorSel.value = prevBbarColorValue;
-            const input = bbarColorInput;
-            input.focus();
-            input.click();
-        } else {
-            document.getElementById('bbar_color_val').textContent = 'custom...';
-            Telegram.WebApp.setBottomBarColor(color);
-            document.body.style.setProperty('--bottom-bar-color', Telegram.WebApp.bottomBarColor);
-            bbarColorInput.value = Telegram.WebApp.bottomBarColor;
-            prevBbarColorValue = bbarColorSel.value;
-        }
-    })
-
-    // theme
-    Telegram.WebApp.onEvent('themeChanged', function () {
-        bgColorInput.value = Telegram.WebApp.backgroundColor
-        document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
-    })
-
-    const orientBtn = document.getElementById('orient_btn')
-    if (Telegram.WebApp.isOrientationLocked) {
-        orientBtn.innerHTML = 'Unlock Orientation'
-    } else {
-        orientBtn.innerHTML = 'Lock Orientation'
-    }
-
-    // permissions
-    try {
-        DemoApp.testClipboard(document.getElementById('clipboard_test'));
-    } catch(e) {}
-    try {
-        DemoApp.loadCloudKeys();
-    } catch(e) {}
-    try {
-        DemoApp.biometricInit();
-    } catch(e) {}
-    try {
-        DemoApp.fullscreenInit();
-    } catch(e) {}
-    try {
-        DemoApp.accelerometerInit();
-    } catch(e) {}
-    try {
-        DemoApp.deviceOrientationInit();
-    } catch(e) {}
-    try {
-        DemoApp.gyroscopeInit();
-    } catch(e) {}
-    try {
-        DemoApp.locationInit();
-    } catch(e) {}
-    try {
-        DemoApp.homeScreenInit();
-    } catch(e) {}
-    try {
-        DemoApp.emojiStatusInit();
-    } catch(e) {}
-    try {
-        DemoApp.activityInit();
-    } catch(e) {}
-</script>
-
-</body>
+    </body>
 </html>
