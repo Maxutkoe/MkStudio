@@ -381,54 +381,102 @@ a {
 	}
 }
 
-.button {
-	padding: 12px 20px;
-	border-radius: 8px;
-	background-color: transparent;
-	border: 0;
-	font-weight: 600;
-	cursor: pointer;
-	transition: 0.15s ease;
-
-	&.is-ghost {
-		&:hover,
-		&:focus {
-			background-color: #dfdad7;
-		}
-	}
-
-	&.is-primary {
-		background-color: #000;
-		color: #fff;
-		&:hover,
-		&:focus {
-			background-color: #999;
-		}
-	}
+.menu {
+  position: fixed;
+  bottom: 3%;
+  left: 42.5%;
+  padding: 30px;
+  
+  background: #fff;
+  border-radius: 100%;
+  cursor: pointer;
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, 0.15), -7px -7px 20px rgba(255, 255, 255, 1), inset 0px 0px 4px rgba(255, 255, 255, 0.2), inset 7px 7px 15px rgba(55, 84, 170, 0), inset -7px -7px 20px rgba(255, 255, 255, 0), 0px 0px 4px rgba(255, 255, 255, 0);
+  &::before, &::after {
+    content: "";
+    background: #000000;
+    border-radius: 5px;
+    width: 30px;
+    height: 5px;
+    position: absolute;
+    left: 16px;
+    top: 27px;
+    transition: 0.2s ease;
+    z-index: 1;
+  }
+  &::before {
+    transform: rotate(0deg);
+  }
+  &::after {
+    transform: rotate(-90deg);
+  }
+  &.open {
+    opacity: .9;
+    &::before {
+      transform: rotate(45deg);
+    }
+    &::after {
+      transform: rotate(-45deg);
+    }
+    .button {
+      opacity: 1;
+      pointer-events: auto;
+      &:first-of-type {
+        bottom: 40px;
+        right: 70px;
+      }
+      &:nth-of-type(2) {
+        bottom: 80px;
+        transition-delay: .05s;
+      }
+      &:last-of-type {
+        bottom: 40px;
+        right: -70px;
+        transition-delay: .1s;
+      }
+    }
+  }
 }
 
-.icon-button {
-	padding: 0;
-	border: 0;
-	background-color: transparent;
-	width: 40px;
-	height: 40px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	line-height: 1;
-	cursor: pointer;
-	border-radius: 8px;
-	transition: 0.15s ease;
-	svg {
-		width: 24px;
-		height: 24px;
-	}
+.button {
+  padding: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #ffffff;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: inherit;
+  transition: 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28), 0.2s ease opacity, 0.2s cubic-bezier(.08,.82,.17,1) transform;
+  z-index: -1;
+  &:hover {
+    transform: scale(1.1);
+  }
+  &:first-of-type {
+    background: url('https://assets.codepen.io/3537853/cam.svg') no-repeat 50%/50% #000000;
+  }
+  &:nth-of-type(2) {
+    background: url('https://assets.codepen.io/3537853/img.svg') no-repeat 50%/ 50% #000000;
+  }
+  &:last-of-type {
+    background: url('https://assets.codepen.io/3537853/music.svg') no-repeat 50% 45%/50% 45% #000000;
+  }
+}
 
-	&:hover,
-	&:focus {
-		background-color: #dfdad7;
-	}
+
+#homescreen{
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+  position: fixed;
+  border: 0px;
+  background: #fff;
+  border-radius: 100%;
+  cursor: pointer;
+  box-shadow: 7px 7px 15px rgba(55, 84, 170, 0.15), -7px -7px 20px rgba(255, 255, 255, 1), inset 0px 0px 4px rgba(255, 255, 255, 0.2), inset 7px 7px 15px rgba(55, 84, 170, 0), inset -7px -7px 20px rgba(255, 255, 255, 0), 0px 0px 4px rgba(255, 255, 255, 0);
+
+
 }
 
 </style>
@@ -785,6 +833,9 @@ connectToWallet().catch(error => {
     <body>
 	<div>
   		<div id="ton-connect" style="position: absolute; top: 2%; right: 5%; z-index: 10"></div>
+  		<button id="homescreen" style="position: fixed; top: 1%; left: 5%; z-index: 10" onclick="tg.addToHomeScreen()">
+		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g clip-path="url(#clip0_429_11177)"> <path d="M19 10V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V10M21 12L12 3L3 12" stroke="#292929" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> </g> <defs> <clipPath id="clip0_429_11177"> <rect width="24" height="24" fill="white"></rect> </clipPath> </defs> </g></svg>
+		</button>
 		<p id="usdt"><span class="fancy">Подключение...</span></p>
 		<div id="hh">
   		<div class="withdraw" onclick="trans()">Вывести</div>
@@ -810,6 +861,12 @@ connectToWallet().catch(error => {
 		<h2 style="font-size: 12px;">There's nothing here yet...</h2>
 	
 	</div>
+	<div id="menuDiv">
+  <div class="menu" onclick="this.classList.toggle('open')">
+  <div class="button"></div>
+  <div class="button"></div>
+  <div class="button"></div>
+</div>
 
        
 </section>
