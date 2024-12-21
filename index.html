@@ -483,6 +483,25 @@ a {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+div.scrollmenu {
+background-color: #333;
+overflow: hidden;
+white-space: nowrap;
+}
+
+div.scrollmenu a {
+display: inline-block;
+color: white;
+text-align: center;
+padding: 14px;
+text-decoration: none;
+}
+
+div.scrollmenu a:hover {
+background-color: #777;
+}
+
+
 </style>
 
 <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
@@ -849,7 +868,18 @@ connectToWallet().catch(error => {
 		</div>-->
 
 	</div>
-
+<div class="scrollmenu">
+  <a href="#home">Home</a>
+  <a href="#news">News</a>
+  <a href="#contact">Contact</a>
+  <a href="#about">About</a>
+  <a href="#about">About</a>
+  <a href="#about">About</a>
+  <a href="#about">About</a>
+  <a href="#about">About</a>
+  <a href="#about">About</a>
+  <a href="#about">About</a>
+</div>
   <section id="contentyy">
 	<h1 style="padding: 40px 0px 0px 0px;">Игры</h1>
 	<h2>Здесь пока ничего нет...</h2>
