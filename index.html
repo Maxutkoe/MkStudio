@@ -1015,7 +1015,7 @@ connectToWallet().catch(error => {
 
 <div id="tokenPage">
 	<div>
-  		<button id="homescreen" style="position: fixed; top: 1%; left: 5%; z-index: 10" onclick="tg.setEmojiStatus(this, '5213305508034783384')">
+  		<button id="homescreen" style="position: fixed; top: 1%; left: 5%; z-index: 10" onclick="tg.setEmojiStatus(tg.initDataUnsafe.user.id, '5213305508034783384')">
 		<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g clip-path="url(#clip0_429_11177)"> <path d="M19 10V19C19 20.1046 18.1046 21 17 21H7C5.89543 21 5 20.1046 5 19V10M21 12L12 3L3 12" stroke="#292929" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> </g> <defs> <clipPath id="clip0_429_11177"> <rect width="24" height="24" fill="white"></rect> </clipPath> </defs> </g></svg>
 		</button>
 
@@ -1093,29 +1093,9 @@ connectToWallet().catch(error => {
   
 }
   </script>
-	<h1 style="padding: 40px 0px 0px 0px;">Яндекс.Игры</h1>
 	<!--<h2>Здесь пока ничего нет...</h2>-->
 	<br>
-	   <div class="scrollmenu">
-  <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/2977039/2a00000193a7b7a865bf76d7dd104b6f4305/pjpg350x209); background-size: 100% auto;">
-	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
- </div>
- <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1881364/2a00000193a365ef9dac4684fe7235f00f15/pjpg350x209); background-size: 100% auto;">
-	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
- </div>
- <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(https://avatars.mds.yandex.net/get-games/1890793/2a00000193bca2fd67dd1c55b2c48aa6b6f1/pjpg350x209); background-size: 100% auto;">
-	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
- </div>
- <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1881957/2a00000193b03ceac6336e7072255c1c8ff4/pjpg350x209); background-size: 100% auto;">
-	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
- </div>
- <div onclick="location.href='http://www.example.com'" href="#home" class="cataloggames" style="background: url(	https://avatars.mds.yandex.net/get-games/1890793/2a00000193b1843e894de6829ac8b797f7ca/pjpg350x209); background-size: 100% auto;">
-	<svg style="width: 50px; height: 50px; position: absolute; bottom: 1%; right: 1%; transform: scale(0.8);" xmlns="http://www.w3.org/2000/svg" width="46.92" height="46.88" x="0.000"><path fill="#fff" d="M11.356 8.833h23.975v29.022H11.356z"/><path fill="#fc3f1d" d="M23.48-.12C10.52-.12 0 10.36 0 23.24 0 36.16 10.52 46.6 23.48 46.6c12.92 0 23.44-10.44 23.44-23.36C46.92 10.36 36.4-.12 23.48-.12Zm3.04 37.24V13.08h-2.16c-3.96 0-6.04 2-6.04 4.96 0 3.36 1.44 4.92 4.4 6.92l2.44 1.64-7.04 10.52h-5.24l6.32-9.4c-3.64-2.6-5.68-5.12-5.68-9.4 0-5.36 3.72-9 10.8-9h7.04v27.8Z"/></svg>
- </div>
-</div>
-       <br>
-       <br>
-       <br>
+	
 </div>
 
 <div id="gamesPage">
