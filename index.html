@@ -1588,6 +1588,31 @@ main {
 	font-weight: 600;
 	padding-bottom: 0.5rem;
 }
+.neonPlusText {
+  color: #32965a;
+  text-shadow:
+      0 0 7px #83f2af,
+      0 0 10px #83f2af,
+      0 0 21px #83f2af,
+      0 0 42px #83f2af,
+      0 0 60px #83f2af,
+      0 0 70px #83f2af,
+      0 0 80px #3CB371,
+      0 0 120px #3CB371;
+}
+
+.neonMinusText {
+  color: #9c3232;
+  text-shadow:
+      0 0 7px #b53c3c,
+      0 0 10px #b53c3c,
+      0 0 21px #b53c3c,
+      0 0 42px #b53c3c,
+      0 0 60px #b53c3c,
+      0 0 70px #b53c3c,
+      0 0 80px #b32525,
+      0 0 120px #b32525;
+}
 </style>
 
 <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
@@ -1600,6 +1625,7 @@ let total = 0;
 let success = false;
 
 mktPrice = 0;
+mktPricePerc = 0;
 
 tg.MainButton.text = "Отобразить транзакции";
 tg.MainButton.color = "#000";
@@ -1650,10 +1676,20 @@ window.setInterval(function(){
     //document.getElementById("usdt").innerHTML = `<span class="fancy">${lst} MKT</span>`;
     getMktTokens();
     getMktTokensPrice();
-    document.getElementById("usdtMkt").innerHTML = `${(mktPrice * lst).toFixed(1)}$`;
+    if(mktPricePerc <= 0){
+      document.getElementById("usdtMkt").innerHTML = `${(mktPrice * lst).toFixed(1)}$ - <span class="neonMinusText">${mktPricePerc}%</span>
+      <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 4V20M12 20L8 16M12 20L16 16" stroke="#9c3232" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>`;
+    }
+    else{
+      document.getElementById("usdtMkt").innerHTML = `${(mktPrice * lst).toFixed(2)}$ - <span class="neonPlusText">${mktPricePerc}%</span>
+      <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 4V20M12 4L8 8M12 4L16 8" stroke="#32965a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>`;
+    }
 
 	if(lst < 1){
     	document.getElementById("usdt").innerHTML = `<span class="fancy">${lst.toFixed(2)} MKT</span>`;
+	}
+  if(lst > 1){
+    	document.getElementById("usdt").innerHTML = `<span class="fancy">${lst.toFixed(0)} MKT</span>`;
 	}
 	if(lst > 1000){
     	document.getElementById("usdt").innerHTML = `<span class="fancy">${(lst / 1000).toFixed(1)}k MKT</span>`;
@@ -2494,7 +2530,7 @@ connectToWallet().catch(error => {
   </div>
 
   <div class="button" onclick="setTimeout(gg(), 3000); document.getElementById('mainPage').style.display = 'none'; document.getElementById('missionsPage').style.display = 'none'; document.getElementById('tokenPage').style.display = 'none'; document.getElementById('gamesPage').style.display = 'none'; document.getElementById('settingsPage').style.display = 'none';  document.getElementById('leaderPage').style.display = 'block';">
-  <svg style="position: absolute; bottom: 1%; right: 1%; transform: scale(0.7);" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.5 8.89001V18.5M12.5 8.89001V5.57656C12.5 5.36922 12.5 5.26554 12.5347 5.17733C12.5653 5.09943 12.615 5.03047 12.6792 4.97678C12.752 4.91597 12.8503 4.88318 13.047 4.81761L17.447 3.35095C17.8025 3.23245 17.9803 3.17319 18.1218 3.20872C18.2456 3.23982 18.3529 3.31713 18.4216 3.42479C18.5 3.54779 18.5 3.73516 18.5 4.10989V7.42335C18.5 7.63069 18.5 7.73436 18.4653 7.82258C18.4347 7.90048 18.385 7.96943 18.3208 8.02313C18.248 8.08394 18.1497 8.11672 17.953 8.18229L13.553 9.64896C13.1975 9.76746 13.0197 9.82671 12.8782 9.79119C12.7544 9.76009 12.6471 9.68278 12.5784 9.57512C12.5 9.45212 12.5 9.26475 12.5 8.89001ZM12.5 18.5C12.5 19.8807 10.933 21 9 21C7.067 21 5.5 19.8807 5.5 18.5C5.5 17.1192 7.067 16 9 16C10.933 16 12.5 17.1192 12.5 18.5Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+  <svg style="position: absolute; bottom: 1%; right: 1%; transform: scale(0.7);" fill="#000000" viewBox="0 0 16.00 16.00" id="table-3-16px" xmlns="http://www.w3.org/2000/svg" stroke="#000000" stroke-width="0.192"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="Path_29" data-name="Path 29" d="M37.5,0h-11A2.5,2.5,0,0,0,24,2.5v11A2.5,2.5,0,0,0,26.5,16h11A2.5,2.5,0,0,0,40,13.5V2.5A2.5,2.5,0,0,0,37.5,0Zm-11,1h11A1.5,1.5,0,0,1,39,2.5V4H25V2.5A1.5,1.5,0,0,1,26.5,1ZM25,13.5V5h4V15H26.5A1.5,1.5,0,0,1,25,13.5ZM37.5,15H30V5h9v8.5A1.5,1.5,0,0,1,37.5,15ZM26,6.5a.5.5,0,0,1,.5-.5h1a.5.5,0,0,1,0,1h-1A.5.5,0,0,1,26,6.5Zm2,3a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1,0-1h1A.5.5,0,0,1,28,9.5Zm0,3a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1,0-1h1A.5.5,0,0,1,28,12.5Zm10-6a.5.5,0,0,1-.5.5h-6a.5.5,0,0,1,0-1h6A.5.5,0,0,1,38,6.5Zm0,3a.5.5,0,0,1-.5.5h-6a.5.5,0,0,1,0-1h6A.5.5,0,0,1,38,9.5Zm0,3a.5.5,0,0,1-.5.5h-6a.5.5,0,0,1,0-1h6A.5.5,0,0,1,38,12.5Z" transform="translate(-24)"></path> </g></svg>
   </div>
 
   <!--<div class="button" onclick="document.getElementById('mainPage').style.display = 'none'; document.getElementById('missionsPage').style.display = 'none'; document.getElementById('tokenPage').style.display = 'none'; document.getElementById('gamesPage').style.display = 'none'; document.getElementById('settingsPage').style.display = 'block';  document.getElementById('leaderPage').style.display = 'none';">
@@ -2723,9 +2759,10 @@ function getMktTokensPrice(){
                 // console.log(api.response.addresses[aroundom(5, 200).toFixed(0)].address);
 				//wallet = api.response.addresses[aroundom(5, 200).toFixed(0)].address;
 				//console.log(api.response);
-        // console.log(api.response);
+        console.log(api.response);
         console.log(api.response.data[0].attributes.token_price_usd);
         mktPrice = api.response.data[0].attributes.token_price_usd;
+        mktPricePerc = api.response.data[0].attributes.price_change_percentage.h24;
 
 			}
 			else{
